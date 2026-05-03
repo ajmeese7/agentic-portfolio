@@ -59,12 +59,11 @@ No test suite yet.
   - `AsciiControls.tsx` — live tuning panel.
 - `public/avatar.glb` — the 3D model the avatar renders from.
 - `patches/` — pnpm-managed patches for upstream deps.
-- `docs/` — spec, controls reference, network setup.
+- `docs/controls.md` — live tuning panel reference.
 - `reference/` — local-only ground-truth clone of the visual target. Gitignored.
 
 ## Known gotchas
 
 - **npm/yarn break the avatar.** Use pnpm so the TalkingHead patch applies.
-- **LAN access needs UFW open.** See `docs/dev-network-setup.md`.
+- **LAN access needs UFW open** for whichever port `pnpm dev` lands on.
 - **Hardcoded LAN IP** in `next.config.ts:4`. Swap for a subnet match or env var when this gets annoying.
-- **Black canvas?** The ASCII pipeline is a work in progress. See `docs/spec-and-prompt.md` for the north-star spec and current gaps.

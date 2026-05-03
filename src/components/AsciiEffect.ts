@@ -176,6 +176,10 @@ export class AsciiEffect extends Effect {
   setBackgroundColor(c: string): void {
     (this.uniforms.get("uBackgroundColor")?.value as THREE.Color).set(c);
   }
+  // uReveal gates which fraction of the avatar (top-down by uv.y) renders.
+  // Wired through but intentionally not animated; the original reference
+  // eased it 0->1 over ~2s as an entry effect. Drive this from a tween if
+  // you ever want that polish back.
   setReveal(r: number): void {
     const u = this.uniforms.get("uReveal");
     if (u) u.value = clamp01(r);

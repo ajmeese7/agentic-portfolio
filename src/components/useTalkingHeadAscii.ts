@@ -24,6 +24,9 @@ export interface AsciiSettings {
 }
 
 export const DEFAULT_SETTINGS: AsciiSettings = {
+  // TalkingHead's built-in "head" view (camera z=2, look-at at 4/5 avatar
+  // height) is tuned for RPM4 scale and crops too tight on anything else.
+  // "upper" (z=4.5, look-at=2/3) is the safe generic.
   view: "upper",
   cameraDistance: 0,
   cameraX: 0,
@@ -44,6 +47,11 @@ export type Status =
   | { kind: "fallback"; text: string }
   | { kind: "ready" };
 
+// Bone retargeting + blendshape baseline for Avaturn-sourced GLBs.
+// Lifted from met4citizen/TalkingHead's siteconfig.js (Avaturn entry).
+// Only relevant if the GLB you ship in /public is from Avaturn; a clean
+// custom Blender export with proper Mixamo bone names and ARKit
+// blendshapes won't need either of these.
 const AVATURN_RETARGET = {
   Hips: { y: 0.03 },
   Spine: { y: 0.02 },
@@ -120,16 +128,28 @@ async function loadFallback(): Promise<string> {
   }
 }
 
+// Per-mood overrides applied after TalkingHead loads its built-in anim
+// library. Each block exists for a specific reason; touch carefully.
 function tweakAnimations(head: TalkingHeadInstance) {
   for (const mood of Object.values(head.animMoods)) {
     if (!mood.anims) continue;
+    // Drop body-level idles. We render head-crop only, so waist swings
+    // ("pose") and arm gestures ("misc") are visible noise at best and
+    // broken (clipped, headless arm shrugs) at worst.
     mood.anims = mood.anims.filter((a) => a.name !== "pose" && a.name !== "misc");
 
+    // Use the idle head movement during "speaking" too. We never speak,
+    // but TalkingHead can still flip into speaking mode internally; this
+    // keeps the head motion consistent instead of swapping in the louder
+    // speaking variants.
     const headAnim = mood.anims.find((a) => a.name === "head");
     if (headAnim?.idle?.vs && headAnim.speaking) {
       headAnim.speaking.vs = JSON.parse(JSON.stringify(headAnim.idle.vs));
     }
 
+    // Restrict eye saccades. Default range darts wider than feels alive
+    // on a static portrait; clamping keeps the eyes flicking but reads
+    // as focused rather than shifty.
     const eyes = mood.anims.find((a) => a.name === "eyes");
     if (eyes?.alt) {
       for (const alt of eyes.alt) {
@@ -139,6 +159,9 @@ function tweakAnimations(head: TalkingHeadInstance) {
       }
     }
 
+    // Realistic asymmetric blink: close 40 ms, hold 80-150 ms, open 60 ms,
+    // fired every 1-8 s. The default blink animation is uniform and reads
+    // as a tic.
     const blink = mood.anims.find((a) => a.name === "blink");
     if (blink) {
       blink.alt = [
@@ -251,6 +274,13 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           lipsyncModules: [],
         });
 
+        // Avatar contract for /public/avatar.glb:
+        //  - Mixamo-style skeleton: Hips, Spine, Spine1, Spine2, Neck, Head,
+        //    LeftShoulder, RightShoulder (TalkingHead drives these for idle).
+        //  - ARKit blendshapes: at minimum eyeBlinkLeft, eyeBlinkRight,
+        //    jawOpen, mouthSmileLeft, mouthSmileRight.
+        //  - Compress before shipping: `gltfpack -cc -tc` for meshopt + KTX2.
+        //    The uncompressed Blender export is ~13 MB and not acceptable.
         await head.showAvatar(
           {
             url: "/avatar.glb",
