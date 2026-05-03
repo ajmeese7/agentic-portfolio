@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+dist/
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Environment
+.env*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Local-only reference material
+reference/

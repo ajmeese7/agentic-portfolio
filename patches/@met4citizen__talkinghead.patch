@@ -1,0 +1,32 @@
+diff --git a/modules/talkinghead.mjs b/modules/talkinghead.mjs
+index 441ddff6b01d05093a244441f77c60ffead695e8..405dce9936bb85fee59a40848836ae18f2adce0e 100755
+--- a/modules/talkinghead.mjs
++++ b/modules/talkinghead.mjs
+@@ -828,7 +828,12 @@ class TalkingHead {
+       this.scene = this.opt.avatarOnlyScene;
+       this.camera = this.opt.avatarOnlyCamera;
+     } else {
+-      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
++      // Patched for agentic-portfolio.
++      // alpha:false keeps the canvas opaque so the AsciiEffect luminance read
++      //   isn't contaminated by the page background bleeding through.
++      // preserveDrawingBuffer:true is defensive insurance for canvas-as-source
++      //   patterns; resize/HMR has surfaced flicker without it.
++      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+       this.renderer.setPixelRatio( this.opt.modelPixelRatio * window.devicePixelRatio );
+       this.renderer.setSize(this.nodeAvatar.clientWidth, this.nodeAvatar.clientHeight);
+       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+@@ -2750,7 +2755,12 @@ class TalkingHead {
+     if ( !this.lipsync.hasOwnProperty(lang) ) {
+       const moduleName = path + 'lipsync-' + lang.toLowerCase() + '.mjs';
+       const className = 'Lipsync' + lang.charAt(0).toUpperCase() + lang.slice(1);
+-      import(moduleName).then( module => {
++      // Patched for agentic-portfolio. Bundler-ignore comments: webpack and
++      // turbopack statically analyze import() and fail with "Critical
++      // dependency: request is an expression" on non-literal paths, even
++      // when never reached at runtime. The app stubs lipsync (see
++      // src/components/useTalkingHeadAscii.ts) so this branch never fires.
++      import(/* webpackIgnore: true */ /* turbopackIgnore: true */ moduleName).then( module => {
+         this.lipsync[lang] = new module[className];
+       });
+     }

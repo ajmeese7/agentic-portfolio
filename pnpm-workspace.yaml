@@ -1,0 +1,4 @@
+allowBuilds:
+  sharp: true
+patchedDependencies:
+  '@met4citizen/talkinghead': patches/@met4citizen__talkinghead.patch

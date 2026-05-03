@@ -1,2 +1,70 @@
 # agentic-portfolio
-Interact with a digital clone of me
+
+Interact with a digital clone of me. Next.js app rendering a live ASCII portrait driven by a 3D avatar (TalkingHead + custom GPU ASCII pass).
+
+## Requirements
+
+- Node.js 22+ (developed on 22.22.0)
+- pnpm 10+ (developed on 10.33.2). The repo uses `pnpm` patches via `pnpm-workspace.yaml`, so npm/yarn will skip the patch and ship a broken TalkingHead build.
+
+## Install
+
+```sh
+pnpm install
+```
+
+This applies `patches/@met4citizen__talkinghead.patch` automatically. If you ever see avatar regressions after upgrading that package, re-check the patch still applies cleanly.
+
+## Run
+
+Dev server (Turbopack, hot reload):
+
+```sh
+pnpm dev
+```
+
+Defaults to `http://localhost:3000`. If 3000 is taken, Next picks the next free port and prints it.
+
+LAN access (phone, other machine on the same network) requires the firewall to allow the dev port. The allowed network IP is currently hardcoded in `next.config.ts` (`allowedDevOrigins`); update it if your LAN IP changes.
+
+## Build
+
+Production build and serve:
+
+```sh
+pnpm build
+pnpm start
+```
+
+`pnpm start` serves the built output on port 3000 by default. Override with `PORT=4000 pnpm start`.
+
+## Quality gates
+
+```sh
+pnpm typecheck   # tsc --noEmit
+pnpm lint        # biome check src
+pnpm fmt         # biome format --write src
+```
+
+No test suite yet.
+
+## Layout
+
+- `src/app/` — Next App Router entry (single page, full-bleed avatar).
+- `src/components/` — ASCII pipeline:
+  - `TalkingHeadAscii.tsx` — top-level client component.
+  - `useTalkingHeadAscii.ts` — boots TalkingHead, wires the GPU ASCII pass.
+  - `AsciiEffect.ts` — fragment-shader ASCII pass.
+  - `buildCharacterAtlas.ts` — generates the glyph atlas at runtime.
+  - `AsciiControls.tsx` — live tuning panel.
+- `public/avatar.glb` — the 3D model the avatar renders from.
+- `patches/` — pnpm-managed patches for upstream deps.
+- `docs/` — spec, controls reference, network setup.
+- `reference/` — local-only ground-truth clone of the visual target. Gitignored.
+
+## Known gotchas
+
+- **npm/yarn break the avatar.** Use pnpm so the TalkingHead patch applies.
+- **LAN access needs UFW open.** See `docs/dev-network-setup.md`.
+- **Hardcoded LAN IP** in `next.config.ts:4`. Swap for a subnet match or env var when this gets annoying.
+- **Black canvas?** The ASCII pipeline is a work in progress. See `docs/spec-and-prompt.md` for the north-star spec and current gaps.
