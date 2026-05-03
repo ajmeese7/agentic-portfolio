@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@met4citizen/talkinghead':
-    hash: 893c2115edf7066246d66c2218a99e9173045724eec23e7271b66f591307c12a
-    path: patches/@met4citizen__talkinghead.patch
+  '@met4citizen/talkinghead@1.7.0':
+    hash: 17989f0bf131af1dfbf60b70797320dc2abd5c8643891b113826b8f0728318fb
+    path: patches/@met4citizen__talkinghead@1.7.0.patch
 
 importers:
 
@@ -15,7 +15,7 @@ importers:
     dependencies:
       '@met4citizen/talkinghead':
         specifier: 1.7.0
-        version: 1.7.0(patch_hash=893c2115edf7066246d66c2218a99e9173045724eec23e7271b66f591307c12a)
+        version: 1.7.0(patch_hash=17989f0bf131af1dfbf60b70797320dc2abd5c8643891b113826b8f0728318fb)
       next:
         specifier: 16.2.4
         version: 16.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -611,7 +611,7 @@ snapshots:
   '@img/sharp-win32-x64@0.34.5':
     optional: true
 
-  '@met4citizen/talkinghead@1.7.0(patch_hash=893c2115edf7066246d66c2218a99e9173045724eec23e7271b66f591307c12a)':
+  '@met4citizen/talkinghead@1.7.0(patch_hash=17989f0bf131af1dfbf60b70797320dc2abd5c8643891b113826b8f0728318fb)':
     dependencies:
       three: 0.180.0
 
