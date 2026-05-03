@@ -1,37 +1,30 @@
-# Controls
+# Avatar interactions and tuning
 
-Live tuning panel for the ASCII avatar. Top-right of the page; toggle
-with `[ hide ]` / `[ controls ]`.
+The avatar shipped to production has no UI panel. There are two surfaces of "control": runtime mouse/touch input the visitor can use, and edit-time tuning constants in `DEFAULT_SETTINGS`.
 
-## Mouse / touch (no panel needed)
+## Runtime input (mouse / touch)
 
-- **Move the cursor** over the canvas — the ASCII characters around
-  the cursor scramble with intensity proportional to mouse velocity.
-- **Move it fast** — leaves a trail of disturbed cells (up to 100
-  alive at once, intensity decays each frame).
-- **Hold mouse-down** while moving — suppresses trail accumulation
-  but `uMouse` and `uVelocity` still update.
-- **Touch-drag** does the same on mobile.
+- **Move the cursor** over the canvas — ASCII characters around the cursor scramble with intensity proportional to mouse velocity. Fast moves leave a trail of disturbed cells (up to 100 alive at once, intensity decays each frame). Touch-drag does the same on mobile.
+- **Left-drag** — rotate the camera around the avatar (TalkingHead OrbitControls).
+- **Right-drag** — pan the look-at point.
+- **Scroll wheel / pinch** — zoom in/out (`cameraDistance`).
+- **Hold mouse-down** while moving — orbit gesture is active; the cursor scramble pauses by design while the user is dragging.
 
-There is no orbit / drag-to-rotate yet. TalkingHead's built-in
-OrbitControls are disabled (`cameraRotateEnable: false`) because
-their event handlers conflict with the cursor-scramble handlers we
-attach to the same canvas. To re-enable orbit, flip those flags and
-either pick one (orbit *or* scramble) or scope the listeners (e.g.,
-scramble on `pointerover`, orbit on `pointerdown`).
+Orbit/pan/zoom is enabled via `cameraRotateEnable` / `cameraPanEnable` / `cameraZoomEnable` on the TalkingHead constructor in `useTalkingHeadAscii.ts`.
 
-Source: `src/components/AsciiControls.tsx`. Defaults defined in
-`DEFAULT_SETTINGS` in `src/components/useTalkingHeadAscii.ts`.
+## Edit-time tuning (`DEFAULT_SETTINGS`)
 
-## Camera
+Defined in `src/components/useTalkingHeadAscii.ts`. These set the avatar's *initial* state. The camera-position fields (`view`, `cameraDistance`, `cameraX`, `cameraY`, `cameraRotateY`) are starting values that the user then overrides via mouse input; the rest are persistent shader / lighting / mood knobs.
 
-| Control | Range | Default | Effect |
-| --- | --- | --- | --- |
-| `view` | `head` / `upper` / `mid` / `full` | `upper` | Preset framing. Each sets a base camera Z and look-at height; see table below. |
-| `distance` | `−2` to `6` | `0` | Added to the view's base Z. Positive = further away. |
-| `x` | `−1` to `1` | `0` | Horizontal camera offset. |
-| `y` | `−1` to `1` | `0` | Vertical camera offset. |
-| `rotate` | `−0.6` to `0.6` rad | `0` | Yaw the camera around the avatar. |
+### Camera (initial position only)
+
+| Field | Default | Effect |
+| --- | --- | --- |
+| `view` | `upper` | Preset framing. Sets a base camera Z and look-at height (see table). |
+| `cameraDistance` | `0` | Added to the view's base Z. Positive = further away. |
+| `cameraX` | `0` | Horizontal camera offset. |
+| `cameraY` | `0` | Vertical camera offset. |
+| `cameraRotateY` | `0` rad | Yaw the camera around the avatar. |
 
 | view  | base Z | look-at Y                       |
 | ----- | ------ | ------------------------------- |
@@ -40,40 +33,24 @@ Source: `src/components/AsciiControls.tsx`. Defaults defined in
 | mid   | 8      | `avatarHeight / 3`              |
 | full  | 12     | 0                               |
 
-## Lighting
+### Lighting
 
-The 20-character ramp wants a wide tonal range, so defaults are
-hot. Underexposed faces collapse into 3-4 chars and look flat.
+The 20-character ramp wants a wide tonal range, so defaults are hot. Underexposed faces collapse into 3-4 chars and look flat.
 
-| Control | Range | Default | Effect |
-| --- | --- | --- | --- |
-| `ambient` | `0` to `30` | `5.50` | TalkingHead `lightAmbientIntensity`. |
-| `direct` | `0` to `300` | `100` | TalkingHead `lightDirectIntensity`. |
+| Field | Default | Effect |
+| --- | --- | --- |
+| `lightAmbient` | `5.5` | TalkingHead `lightAmbientIntensity`. |
+| `lightDirect` | `100` | TalkingHead `lightDirectIntensity`. |
 
-## ASCII shader
+### ASCII shader
 
-| Control | Range | Default | Effect |
-| --- | --- | --- | --- |
-| `cell` | `6` to `40` CSS px | `12` | Visual size of each ASCII cell, in CSS pixels (DPR-stable, so a 4K monitor and a 1080p monitor render the same apparent cell size). Smaller = denser grid. The shader pixelizes the source render to one sample per cell; internally `uCellSize = cell × devicePixelRatio`. |
-| `hover` | `0.05` to `0.4` | `0.10` | `uHoverRadius` — radius (normalized to canvas size) of cursor disturbance. Trail point radius is 0.8× this. |
-| `blend` | `0` to `1` | `0.95` | `uBlend` — `1` is pure ASCII; `0` is greyscale of the underlying render; values between mix the two. Useful for verifying the source render looks right. |
-| `invert` | on/off | off | `uInvertAmount` — flips brightness mapping. With `on`, dark areas become dense chars and light areas become sparse. |
+| Field | Default | Effect |
+| --- | --- | --- |
+| `cellSize` | `12` | CSS-pixel size of each ASCII cell (DPR-stable). Smaller = denser grid. Internally `uCellSize = cellSize × devicePixelRatio`. |
+| `hoverRadius` | `0.1` | `uHoverRadius` — radius (normalized to canvas size) of cursor disturbance. Trail point radius is 0.8× this. |
+| `blend` | `0.95` | `uBlend` — `1` is pure ASCII; `0` is greyscale of the underlying render. Useful for verifying the source render looks right. |
+| `invert` | `false` | `uInvertAmount` — flips brightness mapping. |
 
-## Avatar mood
+### Mood
 
-`mood` switches TalkingHead's animation set: `neutral` / `happy` /
-`angry` / `sad` / `fear` / `disgust` / `love` / `sleep`. Each has its
-own idle blink rate, eye-direction bias, brow / mouth baseline. The
-override pass (drop pose/misc, narrow saccade, replace blink) re-runs
-on the new set.
-
-## Reset
-
-`reset` button at the bottom restores `DEFAULT_SETTINGS`.
-
-## Once you have values you like
-
-Hardcode them into `DEFAULT_SETTINGS` in
-`src/components/useTalkingHeadAscii.ts` and the panel becomes
-optional. To remove the panel, drop the `<AsciiControls>` line from
-`TalkingHeadAscii.tsx`.
+`mood` switches TalkingHead's animation set: `neutral` / `happy` / `angry` / `sad` / `fear` / `disgust` / `love` / `sleep`. Each has its own idle blink rate, eye-direction bias, and brow/mouth baseline. The override pass (drop pose/misc, narrow saccade, replace blink) re-runs on the new set.
