@@ -1,5 +1,5 @@
 diff --git a/modules/talkinghead.mjs b/modules/talkinghead.mjs
-index 441ddff6b01d05093a244441f77c60ffead695e8..3b6cc0d0dd193258662387ea8cb81e285ef1ea33 100755
+index 441ddff6b01d05093a244441f77c60ffead695e8..8ec8cf9956ee1df706885a3a220d9ee6ef9a7c7e 100755
 --- a/modules/talkinghead.mjs
 +++ b/modules/talkinghead.mjs
 @@ -26,6 +26,7 @@ import * as THREE from 'three';
@@ -10,21 +10,25 @@ index 441ddff6b01d05093a244441f77c60ffead695e8..3b6cc0d0dd193258662387ea8cb81e28
  import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  import Stats from 'three/addons/libs/stats.module.js';
-@@ -828,7 +829,12 @@ class TalkingHead {
+@@ -828,7 +829,16 @@ class TalkingHead {
        this.scene = this.opt.avatarOnlyScene;
        this.camera = this.opt.avatarOnlyCamera;
      } else {
 -      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 +      // Patched for agentic-portfolio.
-+      // alpha:false keeps the canvas opaque so the AsciiEffect luminance read
-+      //   isn't contaminated by the page background bleeding through.
++      // alpha:true so the WebGL canvas composites with HTML-page transparency.
++      //   The avatar is a detached ASCII portrait; non-avatar pixels need to
++      //   show whatever sits behind the canvas (page bg, other DOM).
++      // premultipliedAlpha:false keeps the AsciiEffect's straight-alpha output
++      //   from getting double-multiplied at canvas composite time.
 +      // preserveDrawingBuffer:true is defensive insurance for canvas-as-source
 +      //   patterns; resize/HMR has surfaced flicker without it.
-+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
++      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, premultipliedAlpha: false, preserveDrawingBuffer: true });
++      this.renderer.setClearColor( 0x000000, 0 );
        this.renderer.setPixelRatio( this.opt.modelPixelRatio * window.devicePixelRatio );
        this.renderer.setSize(this.nodeAvatar.clientWidth, this.nodeAvatar.clientHeight);
        this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-@@ -1196,6 +1202,11 @@ class TalkingHead {
+@@ -1196,6 +1206,11 @@ class TalkingHead {
      // Loader
      const loader = new GLTFLoader();
  
@@ -36,7 +40,7 @@ index 441ddff6b01d05093a244441f77c60ffead695e8..3b6cc0d0dd193258662387ea8cb81e28
      // Check if draco loading enabled
      if ( this.dracoEnabled ) {
        const dracoLoader = new DRACOLoader();
-@@ -2750,7 +2761,12 @@ class TalkingHead {
+@@ -2750,7 +2765,12 @@ class TalkingHead {
      if ( !this.lipsync.hasOwnProperty(lang) ) {
        const moduleName = path + 'lipsync-' + lang.toLowerCase() + '.mjs';
        const className = 'Lipsync' + lang.charAt(0).toUpperCase() + lang.slice(1);

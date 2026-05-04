@@ -5,6 +5,7 @@
   --muted: #888;
   --accent: #7cfc9a;
   --border: #222;
+  --surface: #0a0a0a;
 }
 
 html,
@@ -12,7 +13,8 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: var(--bg);
+  /*background: var(--bg);*/
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, #ffffff04 2px, #ffffff04 4px), var(--surface);
   color: var(--fg);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -28,7 +30,7 @@ main {
   position: relative;
   width: 100%;
   height: 100dvh;
-  background: var(--bg);
+  background: transparent;
 }
 
 .ascii-fallback {

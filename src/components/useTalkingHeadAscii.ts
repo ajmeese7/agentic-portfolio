@@ -20,6 +20,15 @@ export interface AsciiSettings {
   hoverRadius: number;
   blend: number;
   invert: boolean;
+  // Monochrome (false) renders every glyph in a single uniform color —
+  // high contrast, defaults the look. Colored (true) tints each glyph
+  // with the avatar surface color underneath, with a luma floor so dark
+  // surfaces still read against a dark page.
+  colored: boolean;
+  // null = transparent canvas (HTML page bleeds through empty cells).
+  // Any CSS-style color string fills empty cells with that opaque color
+  // and turns the avatar into a self-contained framed component.
+  backgroundColor: string | null;
   mood: Mood;
 }
 
@@ -34,10 +43,12 @@ export const DEFAULT_SETTINGS: AsciiSettings = {
   cameraRotateY: 0,
   lightAmbient: 5.50,
   lightDirect: 100,
-  cellSize: 12,
+  cellSize: 6,
   hoverRadius: 0.10,
-  blend: 0.95,
+  blend: 0.99,
   invert: false,
+  colored: false,
+  backgroundColor: null,
   mood: "happy",
 };
 
@@ -339,14 +350,14 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
         // call routes through the composer; the composer's internal
         // renderer.render passes through.
         const effect = new AsciiEffect({
-          characters: " .:,'-^=*+?!|0#X%WM@",
           fontSize: 54,
           cellSize: settings.cellSize * window.devicePixelRatio,
           color: "#ffffff",
-          backgroundColor: "#000000",
           invert: settings.invert,
           blend: settings.blend,
           hoverRadius: settings.hoverRadius,
+          colored: settings.colored,
+          backgroundColor: settings.backgroundColor,
         });
         const composer = new EffectComposer(head.renderer);
         composer.addPass(new RenderPass(head.scene, head.camera));
