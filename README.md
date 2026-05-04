@@ -13,7 +13,7 @@ Interact with a digital clone of me. Next.js app rendering a live ASCII portrait
 pnpm install
 ```
 
-This applies `patches/@met4citizen__talkinghead.patch` automatically. If you ever see avatar regressions after upgrading that package, re-check the patch still applies cleanly.
+This applies `patches/@met4citizen__talkinghead@1.7.0.patch` automatically. If you ever see avatar regressions after upgrading that package, re-check the patch still applies cleanly (the version in the filename is the resolved package version pnpm tracks).
 
 ## Run
 
@@ -56,10 +56,11 @@ No test suite yet.
   - `useTalkingHeadAscii.ts` — boots TalkingHead, wires the GPU ASCII pass.
   - `AsciiEffect.ts` — fragment-shader ASCII pass.
   - `buildCharacterAtlas.ts` — generates the glyph atlas at runtime.
-  - `AsciiControls.tsx` — live tuning panel.
-- `public/avatar.glb` — the 3D model the avatar renders from.
+- `public/avatar.glb` — meshopt-compressed 3D model the avatar renders from.
+- `assets/avatar.source.glb` — uncompressed source. Regenerate `public/avatar.glb` via `pnpm compress:avatar`.
+- `scripts/` — build helpers (currently just the avatar compression script).
 - `patches/` — pnpm-managed patches for upstream deps.
-- `docs/controls.md` — live tuning panel reference.
+- `docs/controls.md` — runtime interactions and edit-time tuning knobs.
 - `reference/` — local-only ground-truth clone of the visual target. Gitignored.
 
 ## Known gotchas

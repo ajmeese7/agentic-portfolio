@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { AsciiControls } from "./AsciiControls";
-import { type AsciiSettings, DEFAULT_SETTINGS, useTalkingHeadAscii } from "./useTalkingHeadAscii";
+import { DEFAULT_SETTINGS, useTalkingHeadAscii } from "./useTalkingHeadAscii";
 
 export default function TalkingHeadAscii() {
-  const [settings, setSettings] = useState<AsciiSettings>(DEFAULT_SETTINGS);
-  const { containerRef, status } = useTalkingHeadAscii(settings);
+  const { containerRef, status } = useTalkingHeadAscii(DEFAULT_SETTINGS);
 
   if (status.kind === "fallback") {
     return <pre className="ascii-fallback">{status.text}</pre>;
@@ -20,7 +17,6 @@ export default function TalkingHeadAscii() {
           {status.kind === "init" ? "booting…" : `loading ${Math.round(status.pct)}%`}
         </div>
       )}
-      <AsciiControls settings={settings} onChange={setSettings} />
     </>
   );
 }

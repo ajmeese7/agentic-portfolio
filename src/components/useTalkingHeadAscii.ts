@@ -20,6 +20,15 @@ export interface AsciiSettings {
   hoverRadius: number;
   blend: number;
   invert: boolean;
+  // Monochrome (false) renders every glyph in a single uniform color —
+  // high contrast, defaults the look. Colored (true) tints each glyph
+  // with the avatar surface color underneath, with a luma floor so dark
+  // surfaces still read against a dark page.
+  colored: boolean;
+  // null = transparent canvas (HTML page bleeds through empty cells).
+  // Any CSS-style color string fills empty cells with that opaque color
+  // and turns the avatar into a self-contained framed component.
+  backgroundColor: string | null;
   mood: Mood;
 }
 
@@ -34,10 +43,12 @@ export const DEFAULT_SETTINGS: AsciiSettings = {
   cameraRotateY: 0,
   lightAmbient: 5.50,
   lightDirect: 100,
-  cellSize: 12,
+  cellSize: 6,
   hoverRadius: 0.10,
-  blend: 0.95,
+  blend: 0.99,
   invert: false,
+  colored: false,
+  backgroundColor: null,
   mood: "happy",
 };
 
@@ -208,9 +219,11 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
   const stateRef = useRef<InternalState | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "init" });
 
-  // Boot — runs once. Settings are read on mount and then driven live by
-  // the second useEffect below; we intentionally do NOT re-boot when
-  // settings change.
+  // Boot — runs once on mount. Settings are read here for initial values
+  // (camera, lighting, ASCII effect, mood) and the user then drives the
+  // camera via TalkingHead's OrbitControls. We intentionally do NOT
+  // re-boot or re-apply when settings change; treat the settings object
+  // as a build-time tuning blob, not live state.
   // biome-ignore lint/correctness/useExhaustiveDependencies: see comment above
   useEffect(() => {
     const container = containerRef.current;
@@ -259,9 +272,14 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           cameraY: settings.cameraY,
           cameraDistance: settings.cameraDistance,
           cameraRotateY: settings.cameraRotateY,
-          cameraRotateEnable: false,
-          cameraPanEnable: false,
-          cameraZoomEnable: false,
+          // OrbitControls are owned by TalkingHead; flipping these on lets
+          // the user drag-rotate, drag-pan, and wheel-zoom the avatar. The
+          // cursor-velocity scramble effect listens to mousemove globally
+          // and is intentionally allowed to pause while the orbit controls
+          // are mid-gesture (mousedown).
+          cameraRotateEnable: true,
+          cameraPanEnable: true,
+          cameraZoomEnable: true,
           lightAmbientColor: 0xffffff,
           lightAmbientIntensity: settings.lightAmbient,
           lightDirectColor: 0xffffff,
@@ -332,14 +350,14 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
         // call routes through the composer; the composer's internal
         // renderer.render passes through.
         const effect = new AsciiEffect({
-          characters: " .:,'-^=*+?!|0#X%WM@",
           fontSize: 54,
           cellSize: settings.cellSize * window.devicePixelRatio,
           color: "#ffffff",
-          backgroundColor: "#000000",
           invert: settings.invert,
           blend: settings.blend,
           hoverRadius: settings.hoverRadius,
+          colored: settings.colored,
+          backgroundColor: settings.backgroundColor,
         });
         const composer = new EffectComposer(head.renderer);
         composer.addPass(new RenderPass(head.scene, head.camera));
@@ -515,28 +533,6 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
       stateRef.current = null;
     };
   }, []);
-
-  // Apply settings changes live.
-  useEffect(() => {
-    const s = stateRef.current;
-    if (!s) return;
-    s.head.setView(settings.view, {
-      cameraX: settings.cameraX,
-      cameraY: settings.cameraY,
-      cameraDistance: settings.cameraDistance,
-      cameraRotateY: settings.cameraRotateY,
-    });
-    s.head.setLighting({
-      lightAmbientIntensity: settings.lightAmbient,
-      lightDirectIntensity: settings.lightDirect,
-    });
-    s.head.setMood(settings.mood);
-    s.cellSizeCss = settings.cellSize;
-    s.effect.setCellSize(settings.cellSize * window.devicePixelRatio);
-    s.effect.setHoverRadius(settings.hoverRadius);
-    s.effect.setBlend(settings.blend);
-    s.effect.setInvertAmount(settings.invert ? 1 : 0);
-  }, [settings]);
 
   return { containerRef, status };
 }
