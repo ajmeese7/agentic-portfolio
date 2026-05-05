@@ -1,44 +1,58 @@
+@import "tailwindcss";
+
 :root {
   color-scheme: dark;
-  --fg: #fff;
-  --bg: #000;
-  --muted: #888;
+  --background: #0a0a0a;
+  --foreground: #e6e6e6;
+  --muted: #8a8a8a;
+  --border: #222222;
   --accent: #7cfc9a;
-  --border: #222;
-  --surface: #0a0a0a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border-default: var(--border);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-mono);
+  --font-mono: var(--font-geist-mono);
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  /*background: var(--bg);*/
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, #ffffff04 2px, #ffffff04 4px), var(--surface);
-  color: var(--fg);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      #ffffff04 2px,
+      #ffffff04 4px
+    ),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-main {
-  width: 100%;
-  height: 100dvh;
-  position: relative;
-  overflow: hidden;
+::selection {
+  background: var(--accent);
+  color: var(--background);
 }
 
 .ascii-stage {
   position: relative;
   width: 100%;
-  height: 100dvh;
+  height: 100%;
   background: transparent;
 }
 
 .ascii-fallback {
   width: 100%;
-  height: 100dvh;
+  height: 100%;
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--background);
+  color: var(--foreground);
   font-size: clamp(6px, 1.4vw, 12px);
   line-height: 1;
   white-space: pre;
@@ -57,3 +71,14 @@ main {
   text-transform: lowercase;
 }
 
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.cursor-blink::after {
+  content: "▍";
+  margin-left: 2px;
+  animation: blink 1s steps(2) infinite;
+  color: var(--accent);
+}
