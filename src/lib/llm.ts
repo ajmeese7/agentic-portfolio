@@ -27,6 +27,13 @@ Never invent jobs, employers, or facts. The startup he's at stays
 --- PROFILE ---
 `;
 
+// 0.4 was too tight; the model parroted few-shot examples verbatim.
+// 0.75 keeps enough variation for voice without inviting resume fanfic.
+export const CHAT_GENERATION_OPTIONS = {
+  temperature: 0.75,
+  max_tokens: 420,
+} as const;
+
 export async function buildSystemPrompt(): Promise<string> {
   const profile = await loadProfile();
   return SYSTEM_PREAMBLE + profile;
@@ -67,8 +74,7 @@ export async function* streamChat(
       model: cfg.model,
       messages,
       stream: true,
-      temperature: 0.4,
-      max_tokens: 600,
+      ...CHAT_GENERATION_OPTIONS,
       // llama.cpp / vLLM honor chat_template_kwargs to flip Qwen3-style
       // models into non-thinking mode. Servers/models that don't recognize
       // the field silently ignore it, so it's safe to always send when set.
