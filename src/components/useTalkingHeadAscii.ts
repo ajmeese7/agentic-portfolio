@@ -1,7 +1,8 @@
 "use client";
 
+import { LipsyncEn } from "@met4citizen/talkinghead/modules/lipsync-en.mjs";
 import { EffectComposer, EffectPass, RenderPass } from "postprocessing";
-import { type RefObject, useEffect, useRef, useState } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { AsciiEffect } from "./AsciiEffect";
 
@@ -30,6 +31,13 @@ export interface AsciiSettings {
   // and turns the avatar into a self-contained framed component.
   backgroundColor: string | null;
   mood: Mood;
+  // Developer toggle. When true, speak() runs OpenAI TTS audio through
+  // TalkingHead's upstream viseme pipeline (real lipsync, all 15 visemes).
+  // Without TTS_API_KEY, falls through to browser speechSynthesis with a
+  // fake-jaw fallback driven off `boundary` events -- not phonetic, but
+  // mouth still moves. When false, speak() is plain speechSynthesis with
+  // a static mouth.
+  lipsync: boolean;
 }
 
 export const DEFAULT_SETTINGS: AsciiSettings = {
@@ -41,15 +49,16 @@ export const DEFAULT_SETTINGS: AsciiSettings = {
   cameraX: 0,
   cameraY: 0,
   cameraRotateY: 0,
-  lightAmbient: 5.50,
+  lightAmbient: 5.5,
   lightDirect: 100,
   cellSize: 6,
-  hoverRadius: 0.10,
+  hoverRadius: 0.1,
   blend: 0.99,
   invert: false,
   colored: false,
   backgroundColor: null,
   mood: "happy",
+  lipsync: true,
 };
 
 export type Status =
@@ -97,12 +106,37 @@ interface AnimMood {
   anims?: AnimEntry[];
 }
 
+interface SpeakAudioPayload {
+  audio: AudioBuffer;
+  words: string[];
+  wtimes: number[];
+  wdurations: number[];
+}
+
+interface MorphTargetMesh {
+  morphTargetInfluences: number[];
+  morphTargetDictionary: Record<string, number>;
+}
+
+// Manual override for the jawOpen morph, used by the Web Speech fallback
+// path. The render hook writes `value` into the mesh just before composer
+// draws so it wins against TalkingHead's animation update for that frame.
+// Untouched on the real-viseme path -- TalkingHead drives morphs there.
+interface JawOverride {
+  mesh: MorphTargetMesh;
+  jawIndex: number;
+  value: number;
+  active: boolean;
+}
+
 interface TalkingHeadInstance {
   armature: THREE.Group;
   animMoods: Record<string, AnimMood>;
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
+  audioCtx: AudioContext;
+  morphs: MorphTargetMesh[];
   setView: (view: CameraView, opt?: Record<string, number>) => void;
   setLighting: (opt: Record<string, unknown>) => void;
   setMood: (mood: string) => void;
@@ -110,6 +144,7 @@ interface TalkingHeadInstance {
     opts: Record<string, unknown>,
     onProgress?: (e: ProgressEvent) => void,
   ) => Promise<void>;
+  speakAudio: (payload: SpeakAudioPayload) => void;
 }
 
 interface TalkingHeadCtor {
@@ -207,11 +242,18 @@ interface InternalState {
   // device pixels (cssCellSize * devicePixelRatio) so the visual cell size
   // stays constant across monitors / DPR changes.
   cellSizeCss: number;
+  jawOverride: JawOverride | null;
 }
 
 export interface UseTalkingHeadAsciiResult {
   containerRef: RefObject<HTMLDivElement | null>;
   status: Status;
+  // Speaks `text`. When TTS_API_KEY is configured server-side, audio is
+  // fetched from /api/tts, decoded, and routed through TalkingHead's
+  // speakAudio so visemes drive the mouth in sync with the audio. Without
+  // a key, falls through to browser speechSynthesis (no viseme animation
+  // -- Web Speech doesn't expose its audio output).
+  speak: (text: string) => Promise<void>;
 }
 
 export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsciiResult {
@@ -246,23 +288,6 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
         const mod = await import("@met4citizen/talkinghead");
         const TalkingHead = mod.TalkingHead as unknown as TalkingHeadCtor;
 
-        // Runtime half of the lipsync workaround. We never speak, so
-        // `lipsyncGetProcessor` should never be invoked, but TalkingHead
-        // calls it eagerly during init; the stub keeps that path quiet.
-        // The bundler half lives in patches/@met4citizen__talkinghead.patch
-        // (turbopack/webpack ignore on TalkingHead's dynamic
-        // `import('lipsync-${lang}.mjs')`); without that patch the build
-        // fails before this stub ever runs.
-        const proto = TalkingHead.prototype as unknown as {
-          lipsyncGetProcessor: () => unknown;
-        };
-        proto.lipsyncGetProcessor = function lipsyncStub() {
-          return {
-            preProcessText: (t: string) => t,
-            wordsToVisemes: () => ({ visemes: [], times: [], durations: [] }),
-          };
-        };
-
         // The TalkingHead container IS the visible canvas host now —
         // we want the WebGL canvas exposed so it can receive native
         // pointer events for the cursor scramble effect.
@@ -288,9 +313,21 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           modelFPS: 30,
           avatarIdleEyeContact: 0.2,
           avatarSpeakingEyeContact: 0.5,
-          mixerGainSpeech: 0,
+          mixerGainSpeech: 1,
+          // Suppress dynamic `import('lipsync-${lang}.mjs')` at boot. We
+          // pre-attach the processor below, which is the bundler-safe
+          // alternative to letting TalkingHead resolve modules at runtime.
           lipsyncModules: [],
+          lipsyncLang: "en",
         });
+
+        // Pre-attach the English viseme processor. Static import is bundler-
+        // safe; TalkingHead's lipsyncPreProcessText / lipsyncWordsToVisemes
+        // call sites read from this map, so once it's populated the full
+        // upstream viseme pipeline works through speakAudio().
+        (head as unknown as { lipsync: Record<string, LipsyncEn> }).lipsync = {
+          en: new LipsyncEn(),
+        };
 
         // Avatar contract for /public/avatar.glb:
         //  - Mixamo-style skeleton: Hips, Spine, Spine1, Spine2, Neck, Head,
@@ -370,6 +407,12 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
             origRender(s, c);
             return;
           }
+          // Apply the manual jaw override (Web Speech fallback only) just
+          // before composing. TalkingHead has already finished its animation
+          // update for this tick, so writing the morph value here makes ours
+          // win for the frame.
+          const ov = stateRef.current?.jawOverride;
+          if (ov?.active) ov.mesh.morphTargetInfluences[ov.jawIndex] = ov.value;
           inside = true;
           composer.render();
           inside = false;
@@ -418,6 +461,7 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           lastPointer: { x: 0.5, y: 0.5, t: performance.now() },
           mouseDown: false,
           cellSizeCss: settings.cellSize,
+          jawOverride: null,
         };
         stateRef.current = state;
 
@@ -534,5 +578,133 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
     };
   }, []);
 
-  return { containerRef, status };
+  const speak = useCallback(
+    async (text: string) => {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      const state = stateRef.current;
+      if (!state || !settings.lipsync) {
+        speakBrowserFallback(trimmed, state);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/tts", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ text: trimmed }),
+        });
+        if (!res.ok) {
+          // 503 = TTS_API_KEY not configured. Web Speech doesn't expose its
+          // audio output to JS, so we can't drive real visemes from it --
+          // the fallback fakes mouth motion off boundary events instead.
+          speakBrowserFallback(trimmed, state);
+          return;
+        }
+        const arrayBuf = await res.arrayBuffer();
+        const audioBuffer = await state.head.audioCtx.decodeAudioData(arrayBuf);
+        state.head.speakAudio(buildSpeakAudioPayload(trimmed, audioBuffer));
+      } catch {
+        speakBrowserFallback(trimmed, state);
+      }
+    },
+    [settings.lipsync],
+  );
+
+  return { containerRef, status, speak };
+}
+
+// Linear word-timing estimate. OpenAI's TTS endpoint doesn't return word
+// timestamps, so we split the text into words and distribute their start
+// times across the audio's duration weighted by character count. The
+// intra-word visemes are computed phonetically by LipsyncEn, so even with
+// rough word boundaries the mouth shapes within each word look right;
+// boundary error of ±100 ms isn't perceptible against running speech.
+function buildSpeakAudioPayload(text: string, audio: AudioBuffer) {
+  const tokens = text.split(/\s+/).filter((w) => w.length > 0);
+  const totalMs = audio.duration * 1000;
+  const totalChars = tokens.reduce((sum, w) => sum + w.length, 0) || 1;
+  const words: string[] = [];
+  const wtimes: number[] = [];
+  const wdurations: number[] = [];
+  let cursor = 0;
+  for (const w of tokens) {
+    const dur = (w.length / totalChars) * totalMs;
+    words.push(w);
+    wtimes.push(cursor);
+    wdurations.push(dur);
+    cursor += dur;
+  }
+  return { audio, words, wtimes, wdurations };
+}
+
+function findJawMesh(
+  head: TalkingHeadInstance,
+): { mesh: MorphTargetMesh; jawIndex: number } | null {
+  for (const mesh of head.morphs ?? []) {
+    const idx = mesh.morphTargetDictionary?.jawOpen;
+    if (typeof idx === "number") return { mesh, jawIndex: idx };
+  }
+  return null;
+}
+
+// Web Speech fallback. The Web Speech API doesn't expose its decoded audio
+// to JS, so we can't compute real visemes -- but it does fire `boundary`
+// events at word transitions while speaking. We use those events plus an
+// RAF-driven sine to fake jaw movement that roughly tracks word rhythm.
+// Not phonetically accurate, but reads as "talking" instead of dead-mouthed.
+function speakBrowserFallback(text: string, state: InternalState | null) {
+  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+
+  // Cancel anything in flight; replaces the previous override, if any.
+  window.speechSynthesis.cancel();
+  if (state?.jawOverride) {
+    state.jawOverride.active = false;
+    state.jawOverride.mesh.morphTargetInfluences[state.jawOverride.jawIndex] = 0;
+  }
+
+  const utter = new SpeechSynthesisUtterance(text);
+
+  const jaw = state ? findJawMesh(state.head) : null;
+  if (state && jaw) {
+    const override: JawOverride = {
+      mesh: jaw.mesh,
+      jawIndex: jaw.jawIndex,
+      value: 0,
+      active: false,
+    };
+    state.jawOverride = override;
+
+    let raf = 0;
+    let lastBoundary = 0;
+    const animate = () => {
+      const elapsed = performance.now() - lastBoundary;
+      // Decay to a low idle hum after each boundary so it pulses with words
+      // rather than running flat-out for the whole utterance.
+      const energy = Math.max(0.25, 1 - elapsed / 350);
+      const wobble = Math.abs(Math.sin(performance.now() / 75));
+      override.value = 0.1 + 0.45 * wobble * energy;
+      raf = requestAnimationFrame(animate);
+    };
+
+    utter.onstart = () => {
+      override.active = true;
+      lastBoundary = performance.now();
+      animate();
+    };
+    utter.onboundary = () => {
+      lastBoundary = performance.now();
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      override.active = false;
+      override.value = 0;
+      jaw.mesh.morphTargetInfluences[jaw.jawIndex] = 0;
+      if (state.jawOverride === override) state.jawOverride = null;
+    };
+    utter.onend = stop;
+    utter.onerror = stop;
+  }
+
+  window.speechSynthesis.speak(utter);
 }

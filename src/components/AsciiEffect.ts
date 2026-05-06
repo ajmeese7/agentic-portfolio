@@ -171,14 +171,15 @@ export class AsciiEffect extends Effect {
       cellSize = 12,
       invert = false,
       blend = 1,
-      hoverRadius = 0.10,
+      hoverRadius = 0.1,
       color = "#ffffff",
       colored = false,
       backgroundColor = null,
     } = options;
 
     const atlas = buildCharacterAtlas(characters, fontSize);
-    const bgColor = backgroundColor != null ? new THREE.Color(backgroundColor) : new THREE.Color(0x000000);
+    const bgColor =
+      backgroundColor != null ? new THREE.Color(backgroundColor) : new THREE.Color(0x000000);
     const bgAlpha = backgroundColor != null ? 1 : 0;
 
     const uniforms = new Map<string, THREE.Uniform<unknown>>([

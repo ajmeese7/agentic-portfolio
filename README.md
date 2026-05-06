@@ -2,6 +2,11 @@
 
 Interact with a digital clone of me. Next.js app rendering a live ASCII portrait driven by a 3D avatar (TalkingHead + custom GPU ASCII pass).
 
+## Credits
+- **Inspiration:** [Matthew Peterson](https://www.matthewpetersen.ca/)
+- **Name image generation:** [README ASCII](https://github.com/ajmeese7/readme-ascii)
+  - *Font:* DOS Rebel - [Valerie Mates](https://www.unixmama.com/)
+
 ## Requirements
 
 - Node.js 22+ (developed on 22.22.0)

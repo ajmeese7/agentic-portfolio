@@ -36,6 +36,7 @@ export type LlmConfig = {
   baseUrl: string;
   apiKey: string;
   model: string;
+  disableThinking: boolean;
 };
 
 export function getLlmConfig(): LlmConfig | null {
@@ -43,7 +44,11 @@ export function getLlmConfig(): LlmConfig | null {
   const model = process.env.LLM_MODEL;
   const apiKey = process.env.LLM_API_KEY ?? "sk-no-key-required";
   if (!baseUrl || !model) return null;
-  return { baseUrl: baseUrl.replace(/\/$/, ""), apiKey, model };
+  // Reasoning models (Qwen3, DeepSeek-R1, etc.) burn latency + tokens on a
+  // chain-of-thought we never display. Off by default for snappy chat;
+  // set LLM_DISABLE_THINKING=false to leave reasoning enabled.
+  const disableThinking = (process.env.LLM_DISABLE_THINKING ?? "true").toLowerCase() !== "false";
+  return { baseUrl: baseUrl.replace(/\/$/, ""), apiKey, model, disableThinking };
 }
 
 // Streams the upstream OpenAI-compatible /chat/completions response and
@@ -64,6 +69,10 @@ export async function* streamChat(
       stream: true,
       temperature: 0.4,
       max_tokens: 600,
+      // llama.cpp / vLLM honor chat_template_kwargs to flip Qwen3-style
+      // models into non-thinking mode. Servers/models that don't recognize
+      // the field silently ignore it, so it's safe to always send when set.
+      ...(cfg.disableThinking ? { chat_template_kwargs: { enable_thinking: false } } : {}),
     }),
   });
 

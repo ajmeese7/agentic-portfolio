@@ -6,7 +6,11 @@ type Msg = { role: "user" | "assistant"; content: string };
 
 const PROMPTS = ["Tell me about your projects", "What are you working on?", "How do I hire you?"];
 
-export function Chat() {
+interface ChatProps {
+  onResponseComplete?: (text: string) => void;
+}
+
+export function Chat({ onResponseComplete }: ChatProps = {}) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [streaming, setStreaming] = useState(false);
@@ -41,6 +45,7 @@ export function Chat() {
             return copy;
           });
         }
+        if (acc.trim()) onResponseComplete?.(acc);
       } catch {
         setMessages((cur) => {
           const copy = cur.slice();
@@ -54,7 +59,7 @@ export function Chat() {
         setStreaming(false);
       }
     },
-    [messages, streaming],
+    [messages, streaming, onResponseComplete],
   );
 
   useEffect(() => {
@@ -102,7 +107,7 @@ export function Chat() {
             )}
             {messages.map((m, i) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: messages are append-only
-              <div key={i} className="leading-relaxed">
+              <div key={i} className="leading-relaxed whitespace-pre-wrap">
                 <span className={m.role === "user" ? "text-muted" : "text-accent"}>
                   {m.role === "user" ? "you ›" : "aaron ›"}
                 </span>{" "}

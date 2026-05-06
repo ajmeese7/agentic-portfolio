@@ -1,6 +1,6 @@
 import Image from "next/image";
-import aaron from "../../public/aaron.png";
-import meese from "../../public/meese.png";
+import aaron from "../../public/AARON.png";
+import meese from "../../public/MEESE.png";
 
 export function Banner() {
   return (
