@@ -4,7 +4,31 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const PROMPTS = ["Tell me about your projects", "What are you working on?", "How do I hire you?"];
+// Pool of conversation starters. All are answerable from src/content/profile.md
+// so the model doesn't refuse. Three are picked at random on each page load.
+const PROMPT_POOL = [
+  "Tell me about your projects",
+  "What are you working on?",
+  "Why'd you leave the blue team?",
+  "Pitch me on readme-ascii",
+  "Where can I find your work?",
+  "How'd this avatar get built?",
+  "What's termblog?",
+  "What kind of problems do you like working on?",
+  "What does Meese Enterprises do?",
+  "What's your local LLM work about?",
+  "What are you building publicly?",
+];
+const VISIBLE_PROMPTS = 3;
+
+function pickPrompts(): string[] {
+  const copy = PROMPT_POOL.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, VISIBLE_PROMPTS);
+}
 
 interface ChatProps {
   onResponseComplete?: (text: string) => void;
@@ -15,7 +39,15 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [streaming, setStreaming] = useState(false);
   const [input, setInput] = useState("");
+  // Render a stable subset on the server so SSR + first hydration match;
+  // useEffect below shuffles client-side after mount. One paint of "default,"
+  // then random — the buttons are below the fold and the swap is invisible.
+  const [prompts, setPrompts] = useState<string[]>(PROMPT_POOL.slice(0, VISIBLE_PROMPTS));
   const scrollerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setPrompts(pickPrompts());
+  }, []);
 
   const send = useCallback(
     async (text: string) => {
@@ -77,7 +109,7 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
   return (
     <section aria-label="conversation mode" className="mt-10">
       <div className="flex flex-wrap gap-3">
-        {PROMPTS.map((p) => (
+        {prompts.map((p) => (
           <button
             key={p}
             type="button"
