@@ -5,28 +5,38 @@ import type { Project } from "@/lib/projects";
 // to change the criteria).
 export const projects: Project[] = [
   {
+    slug: "termblog",
+    title: "termblog",
+    blurb:
+      "Self-hosted, terminal-themed blogging platform. Better as opt-in flavor than forcing every reader through the bit.",
+    tags: ["Go", "Self-hosted", "Blog"],
+    stars: 2,
+    repo: "https://github.com/ajmeese7/termblog",
+    live: "https://termblog.com",
+  },
+  {
+    slug: "local-llm-work",
+    title: "local LLM work",
+    blurb:
+      "Private for now, becoming a larger public thread: practical local model usage, tooling, and infrastructure.",
+    tags: ["Python", "Local LLMs", "Tooling"],
+  },
+  {
     slug: "readme-ascii",
     title: "readme-ascii",
     blurb:
       "Turns text into ASCII-art images for GitHub READMEs. The banner above? Built with this.",
-    metric: "85★",
     tags: ["JavaScript", "ASCII", "GitHub"],
+    stars: 86,
     repo: "https://github.com/ajmeese7/readme-ascii",
     live: "https://readme-ascii.herokuapp.com/",
-  },
-  {
-    slug: "termblog",
-    title: "termblog",
-    blurb: "Self-hosted, terminal-themed blogging platform written in Go.",
-    tags: ["Go", "Self-hosted", "Blog"],
-    repo: "https://github.com/ajmeese7/termblog",
-    live: "https://termblog.com",
   },
   {
     slug: "reading-log",
     title: "reading-log",
     blurb: "Log articles I consume to an RSS feed via Cloudflare Workers.",
     tags: ["TypeScript", "Cloudflare", "RSS"],
+    stars: 1,
     repo: "https://github.com/ajmeese7/reading-log",
   },
   {
@@ -34,6 +44,7 @@ export const projects: Project[] = [
     title: "finance-dashboard",
     blurb: "Track personal finance performance over time.",
     tags: ["JavaScript", "Web App"],
+    stars: 3,
     repo: "https://github.com/ajmeese7/finance-dashboard",
   },
   {
@@ -41,6 +52,7 @@ export const projects: Project[] = [
     title: "image-to-8bit",
     blurb: "Transform images into pixelated 8-bit artwork in the browser.",
     tags: ["JavaScript", "Canvas"],
+    stars: 9,
     repo: "https://github.com/ajmeese7/image-to-8bit",
     live: "https://ajmeese7.github.io/image-to-8bit/",
   },
@@ -49,6 +61,7 @@ export const projects: Project[] = [
     title: "matrix-wallpaper",
     blurb: "Wallpaper Engine wallpaper with the falling-rain Matrix effect.",
     tags: ["JavaScript", "Wallpaper Engine"],
+    stars: 7,
     repo: "https://github.com/ajmeese7/matrix-wallpaper",
   },
 ];

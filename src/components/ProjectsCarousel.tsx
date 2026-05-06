@@ -7,6 +7,7 @@ import type { Project } from "@/lib/projects";
 export function ProjectsCarousel({ projects }: { projects: Project[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [selected, setSelected] = useState(0);
+  const [visibleProjects, setVisibleProjects] = useState(projects);
 
   const onSelect = useCallback(() => {
     if (emblaApi) setSelected(emblaApi.selectedScrollSnap());
@@ -17,6 +18,32 @@ export function ProjectsCarousel({ projects }: { projects: Project[] }) {
     emblaApi.on("select", onSelect);
     onSelect();
   }, [emblaApi, onSelect]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function refreshMetrics() {
+      try {
+        const res = await fetch("/api/github-metrics");
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          metrics?: Record<string, { stars?: number }>;
+        };
+        if (cancelled || !data.metrics) return;
+        setVisibleProjects((current) =>
+          current.map((project) => ({
+            ...project,
+            stars: data.metrics?.[project.slug]?.stars ?? project.stars,
+          })),
+        );
+      } catch {
+        // Keep the hand-curated cached metrics from src/content/projects.ts.
+      }
+    }
+    refreshMetrics();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <section aria-labelledby="projects-h" className="mt-16">
@@ -35,7 +62,8 @@ export function ProjectsCarousel({ projects }: { projects: Project[] }) {
             ‹
           </button>
           <span className="text-xs self-center">
-            {String(selected + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+            {String(selected + 1).padStart(2, "0")} /{" "}
+            {String(visibleProjects.length).padStart(2, "0")}
           </span>
           <button
             type="button"
@@ -51,14 +79,14 @@ export function ProjectsCarousel({ projects }: { projects: Project[] }) {
 
       <div ref={emblaRef} className="overflow-hidden">
         <div className="flex gap-4">
-          {projects.map((p) => (
+          {visibleProjects.map((p) => (
             <article
               key={p.slug}
               className="min-w-0 shrink-0 grow-0 basis-full sm:basis-1/2 lg:basis-1/3 border border-border-default rounded p-5 hover:border-accent/60 transition-colors"
             >
               <div className="flex items-baseline justify-between">
                 <h3 className="text-foreground text-base">{p.title}</h3>
-                {p.metric && <span className="text-accent text-xs">{p.metric}</span>}
+                {p.stars !== undefined && <span className="text-accent text-xs">{p.stars}★</span>}
               </div>
               <p className="text-muted text-sm mt-2 leading-relaxed">{p.blurb}</p>
               <div className="flex flex-wrap gap-2 mt-4">
