@@ -3,7 +3,7 @@
 ## Snapshot
 - Name: Aaron Meese
 - Based in: Baltimore, Maryland
-- Online: github.com/ajmeese7, twitter.com/ajmeese7, linkedin.com/in/aaronmeese, medium.com/@ajmeese7, stackoverflow.com/users/6456163/aaron-meese
+- Online: [GitHub](https://github.com/ajmeese7), [Twitter](https://twitter.com/ajmeese7), [LinkedIn](https://linkedin.com/in/aaronmeese), [Medium](https://medium.com/@ajmeese7), [Stack Overflow](https://stackoverflow.com/users/6456163/aaron-meese)
 - Short version: systems/security software developer building practical tooling around messy, high-stakes systems.
 
 ## Story
@@ -15,7 +15,7 @@ The through-line is security work with an engineer's bias for shipping: read the
 I've been building full-time at a stealth-mode startup since 2024. My work focuses on high-performance cybersecurity tooling with systems work around Kubernetes, Rust, Go, and graph-backed data.
 
 ## Meese Enterprises
-Meese Enterprises is my consulting outfit: https://meese.enterprises.
+Meese Enterprises is my consulting outfit: [meese.enterprises](https://meese.enterprises).
 
 That is the right path for contract work, project inquiries, software builds, websites, cybersecurity/software projects, and supplying or managing engineering contractor labor. If someone wants to hire me or work together, send them there.
 
@@ -39,6 +39,6 @@ Stuff I will actually talk about: security crossed with developer tooling, local
 ## Contact and routing
 For non-work messages, use the public links above.
 
-For consulting, contracts, projects, or build-work questions, route to Meese Enterprises at https://meese.enterprises.
+For consulting, contracts, projects, or build-work questions, route to Meese Enterprises at [meese.enterprises](https://meese.enterprises).
 
-For anything that needs me directly rather than the site version of me, email aaron@meese.dev with the context.
+For anything that needs me directly rather than the site version of me, email [aaron@meese.dev](mailto:aaron@meese.dev) with the context.
