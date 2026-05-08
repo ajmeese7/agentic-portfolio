@@ -4,12 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-// Pool of conversation starters. All are answerable from src/content/profile.md
+// Pool of conversation starters. All should be answerable from src/content/profile.md
 // so the model doesn't refuse. Three are picked at random on each page load.
 const PROMPT_POOL = [
   "Tell me about your projects",
   "What are you working on?",
-  "Why'd you leave the blue team?",
   "Pitch me on readme-ascii",
   "Where can I find your work?",
   "How'd this avatar get built?",
@@ -17,7 +16,6 @@ const PROMPT_POOL = [
   "What kind of problems do you like working on?",
   "What does Meese Enterprises do?",
   "What's your local LLM work about?",
-  "What are you building publicly?",
 ];
 const VISIBLE_PROMPTS = 3;
 
