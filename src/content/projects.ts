@@ -22,8 +22,7 @@ export const projects: Project[] = [
   {
     slug: "local-llms",
     title: "local-llms",
-    blurb:
-      "Practical local model usage, tooling, and infrastructure. Less AI as a party trick, more whether models can run privately and be useful.",
+    blurb: "Practical local model usage, tooling, and infrastructure.",
     tags: ["Python", "Local LLMs", "Tooling"],
     stars: 1,
     repo: "https://github.com/ajmeese7/local-llms",
