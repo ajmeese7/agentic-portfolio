@@ -24,7 +24,7 @@ export function Hero({ banner }: HeroProps) {
           <p className="text-muted text-sm sm:text-base">
             ↳ making complex systems work smarter, not harder.
             <br />
-            ex-blue-team. now shipping at a stealth startup.
+            ex-blue-team. between roles, listening for the next thing.
           </p>
           <Chat onResponseComplete={handleResponseComplete} />
         </div>
