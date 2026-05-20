@@ -67,6 +67,12 @@ export type Status =
   | { kind: "fallback"; text: string }
   | { kind: "ready" };
 
+// Browser SpeechSynthesis fallback is gated off until a real TTS is wired
+// up. When /api/tts isn't configured (no TTS_API_KEY) the avatar stays
+// silent instead of barking through the OS voice. Flip to true to restore
+// the fake-jaw Web Speech path.
+const ENABLE_BROWSER_TTS_FALLBACK = false;
+
 // Bone retargeting + blendshape baseline for Avaturn-sourced GLBs.
 // Lifted from met4citizen/TalkingHead's siteconfig.js (Avaturn entry).
 // Only relevant if the GLB you ship in /public is from Avaturn; a clean
@@ -584,7 +590,7 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
       if (!trimmed) return;
       const state = stateRef.current;
       if (!state || !settings.lipsync) {
-        speakBrowserFallback(trimmed, state);
+        if (ENABLE_BROWSER_TTS_FALLBACK) speakBrowserFallback(trimmed, state);
         return;
       }
 
@@ -595,17 +601,18 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           body: JSON.stringify({ text: trimmed }),
         });
         if (!res.ok) {
-          // 503 = TTS_API_KEY not configured. Web Speech doesn't expose its
-          // audio output to JS, so we can't drive real visemes from it --
-          // the fallback fakes mouth motion off boundary events instead.
-          speakBrowserFallback(trimmed, state);
+          // 503 = TTS_API_KEY not configured. With the browser fallback
+          // disabled the avatar simply stays silent; flip
+          // ENABLE_BROWSER_TTS_FALLBACK back on for the fake-jaw Web Speech
+          // path that drives mouth motion off boundary events.
+          if (ENABLE_BROWSER_TTS_FALLBACK) speakBrowserFallback(trimmed, state);
           return;
         }
         const arrayBuf = await res.arrayBuffer();
         const audioBuffer = await state.head.audioCtx.decodeAudioData(arrayBuf);
         state.head.speakAudio(buildSpeakAudioPayload(trimmed, audioBuffer));
       } catch {
-        speakBrowserFallback(trimmed, state);
+        if (ENABLE_BROWSER_TTS_FALLBACK) speakBrowserFallback(trimmed, state);
       }
     },
     [settings.lipsync],
