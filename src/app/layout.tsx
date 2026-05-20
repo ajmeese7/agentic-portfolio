@@ -9,12 +9,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Aaron Meese",
-  description:
-    "Aaron Meese — making complex systems work smarter, not harder. Ex-blue-team, now full-stack.",
+  description: "making complex systems work smarter, not harder. ex-blue-team, now full-stack.",
   metadataBase: new URL("https://meese.dev"),
   openGraph: {
     title: "Aaron Meese",
-    description: "Engineer. Ex-blue-team. Currently shipping at a stealth startup.",
+    description: "developer with a background in cybersecurity and systems tooling, between roles",
     url: "https://meese.dev",
     siteName: "meese.dev",
     type: "website",

@@ -29,3 +29,14 @@ declare module "@met4citizen/talkinghead" {
     speakText(text: string): void;
   }
 }
+
+declare module "@met4citizen/talkinghead/modules/lipsync-en.mjs" {
+  interface LipsyncProcessor {
+    preProcessText(s: string): string;
+    wordsToVisemes(word: string): { visemes: string[]; times: number[]; durations: number[] };
+  }
+  export class LipsyncEn implements LipsyncProcessor {
+    preProcessText(s: string): string;
+    wordsToVisemes(word: string): { visemes: string[]; times: number[]; durations: number[] };
+  }
+}

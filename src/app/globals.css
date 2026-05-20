@@ -45,6 +45,20 @@ body {
   width: 100%;
   height: 100%;
   background: transparent;
+  /* Fade the avatar's silhouette to transparency so the striped page
+     pattern shows through at the edges. circle closest-side anchors
+     the fade radius to the container's smaller dimension; the silhouette
+     glyphs near the rectangle edges become progressively transparent. */
+  -webkit-mask-image: radial-gradient(
+    circle closest-side,
+    black 55%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    circle closest-side,
+    black 55%,
+    transparent 100%
+  );
 }
 
 .ascii-fallback {
@@ -81,4 +95,31 @@ body {
   margin-left: 2px;
   animation: blink 1s steps(2) infinite;
   color: var(--accent);
+}
+
+/* Custom scrollbar for the chat transcript. Thin, transparent track that
+   blends with the page; muted thumb that picks up the accent on hover so
+   the scrollbar feels native to the dark-mono aesthetic. */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.chat-scroll:hover {
+  scrollbar-color: var(--muted) transparent;
+}
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+.chat-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--muted);
+}
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }

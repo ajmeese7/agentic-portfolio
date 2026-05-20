@@ -2,7 +2,7 @@ export type Project = {
   slug: string;
   title: string;
   blurb: string;
-  metric?: string;
+  stars?: number;
   tags: string[];
   repo?: string;
   live?: string;
