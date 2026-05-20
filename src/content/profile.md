@@ -44,7 +44,7 @@ Older security and writing work, useful context.
 - **Pokémon Go.** Skipped it entirely until October 2025, hooked since; regular at community events and meetups.
 - **Music.** Spotify's last-12-months top genres: trap metal, horrorcore, emo rap, melodic rap, rap metal, cloud rap, underground hip hop, rap, EDM, hyperpop.
 - **Competitive cyber.** Forensics main on the US Cyber Team for SIV Season 4; placed a very close second at the Palmetto Cyber Defense Competition against the Navy team (which was hosting the infrastructure).
-- **Home lab.** Two GPU workstations plus a refurb Dell R740 running Proxmox. The R740 hosts a web server, two dev boxes, a NAS, Home Assistant, a FlareVM sandbox, and assorted odds and ends.
+- **Home lab.** Two GPU workstations plus a refurb Dell R740 running Proxmox. The R740 hosts a web server, two dev boxes, a NAS, Home Assistant, a FlareVM sandbox, a private Gitea instance, and assorted odds and ends.
 - **Around the edges.** Two cats. Eat the same handful of meals on repeat (grilled cheese pulls more weight than it should). Drink exclusively Reign Storm Clean Energy (green), which I now have to hunt for because nobody stocks it anymore.
 
 ## Daily tooling
