@@ -58,7 +58,7 @@ export const DEFAULT_SETTINGS: AsciiSettings = {
   colored: false,
   backgroundColor: null,
   mood: "happy",
-  lipsync: true,
+  lipsync: false,
 };
 
 export type Status =
