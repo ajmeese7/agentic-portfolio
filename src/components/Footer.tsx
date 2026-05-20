@@ -3,7 +3,7 @@ const links = [
   { label: "github", href: "https://github.com/ajmeese7" },
   { label: "linkedin", href: "https://www.linkedin.com/in/aaronmeese/" },
   { label: "twitter", href: "https://twitter.com/ajmeese7" },
-  { label: "resume", href: "/resume.pdf" },
+  //{ label: "resume", href: "/resume.pdf" },
 ];
 
 export function Footer() {
