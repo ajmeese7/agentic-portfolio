@@ -20,12 +20,13 @@ export const projects: Project[] = [
     live: "https://blog.aaronmeese.com/how-i-set-up-multi-user-ai-agents-with-hermes-and-you-can-too-648b52fe20e9",
   },
   {
-    slug: "local-llm-work",
-    title: "local LLM work",
+    slug: "local-llms",
+    title: "local-llms",
     blurb:
-      "Private for now, becoming a larger public thread: practical local model usage, tooling, and infrastructure.",
+      "Practical local model usage, tooling, and infrastructure. Less AI as a party trick, more whether models can run privately and be useful.",
     tags: ["Python", "Local LLMs", "Tooling"],
-    //repo: "https://github.com/meese-family/local-llms",
+    stars: 1,
+    repo: "https://github.com/ajmeese7/local-llms",
   },
   {
     slug: "readme-ascii",

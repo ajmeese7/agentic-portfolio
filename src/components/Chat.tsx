@@ -151,7 +151,7 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
       {hasMessages && (
         <div
           ref={scrollerRef}
-          className="max-h-96 overflow-y-auto space-y-4 text-sm pr-1"
+          className="chat-scroll max-h-96 overflow-y-auto space-y-4 text-sm pr-1"
         >
           {messages.map((m, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: messages are append-only

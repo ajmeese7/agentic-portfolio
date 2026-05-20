@@ -19,18 +19,19 @@ export function Hero({ banner }: HeroProps) {
     <section>
       <div className="overflow-hidden">{banner}</div>
 
-      <div className="mt-8 lg:grid lg:grid-cols-[1fr_auto] lg:gap-12 lg:items-start">
-        <div>
-          <p className="text-muted text-sm sm:text-base">
-            ↳ making complex systems work smarter, not harder.
-            <br />
-            ex-blue-team. between roles, listening for the next thing.
-          </p>
-          <Chat onResponseComplete={handleResponseComplete} />
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0 lg:items-start">
+        <p className="text-muted text-sm sm:text-base lg:col-start-1 lg:row-start-1">
+          ↳ making complex systems work smarter, not harder.
+          <br />
+          ex-blue-team. between roles, listening for the next thing.
+        </p>
+
+        <div className="w-64 sm:w-72 md:w-80 mx-auto lg:mx-0 aspect-square lg:col-start-2 lg:row-start-1 lg:row-span-2">
+          <TalkingHeadAscii ref={avatarRef} />
         </div>
 
-        <div className="order-first lg:order-last mb-8 lg:mb-0 w-64 sm:w-72 md:w-80 mx-auto lg:mx-0 aspect-square">
-          <TalkingHeadAscii ref={avatarRef} />
+        <div className="lg:col-start-1 lg:row-start-2">
+          <Chat onResponseComplete={handleResponseComplete} />
         </div>
       </div>
     </section>

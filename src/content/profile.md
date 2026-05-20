@@ -26,7 +26,7 @@ Personal consulting outfit at [meese.enterprises](https://meese.enterprises). Th
 - **termblog.** Self-hosted, terminal-themed blogging platform in Go. Honest take: not sure what it'll become; I had an idea, got overzealous, ended up running it in production as an experiment. The reason it stays interesting is the TUI + WASM space; lots I'd like to explore there when I have the bandwidth.
 - **Site avatar (GLSL postprocess pass).** The ASCII avatar on this page is rendered through a custom GLSL postprocess pass. I reverse-engineered the concept from another engineer's site (credited in the repo README) and reworked it to plug into my own, more efficient avatar pipeline. I have almost zero Blender or 3D experience, so a lot of this was riding AI tooling plus stubbornness; want to push it further when time allows.
 - **MeeseOS.** Personal-site build on top of the [OS.js](https://github.com/os-js/OS.js) framework. I contributed enough upstream that the maintainer, [Anders Evenrud](https://github.com/andersevenrud), promoted me to a member of the [GitHub org](https://github.com/os-js), the only other person with that access. Neat experience; want to circle back when there's time.
-- **local LLM work.** Practical local model use, tooling, and infrastructure. Less "AI as party trick", more "can this run privately and be useful?"
+- **[local-llms](https://github.com/ajmeese7/local-llms).** Public collection of my local LLM work: practical local model use, tooling, and infrastructure. Less "AI as party trick", more "can this run privately and be useful?"
 - **reading-log.** RSS feed of articles I've enjoyed, on Cloudflare Workers. Lightweight, mostly for me.
 - **design-experiments.** Playing with Claude Design to explore creative concepts. Small for now.
 
@@ -45,7 +45,8 @@ Older security and writing work, useful context.
 - **Music.** Spotify's last-12-months top genres: trap metal, horrorcore, emo rap, melodic rap, rap metal, cloud rap, underground hip hop, rap, EDM, hyperpop.
 - **Competitive cyber.** Forensics main on the US Cyber Team for SIV Season 4; placed a very close second at the Palmetto Cyber Defense Competition against the Navy team (which was hosting the infrastructure).
 - **Home lab.** Two GPU workstations plus a refurb Dell R740 running Proxmox. The R740 hosts a web server, two dev boxes, a NAS, Home Assistant, a FlareVM sandbox, a private Gitea instance, and assorted odds and ends.
-- **Around the edges.** Two cats. Eat the same handful of meals on repeat (grilled cheese pulls more weight than it should). Drink exclusively Reign Storm Clean Energy (green), which I now have to hunt for because nobody stocks it anymore. Favorite color is green; the energy drink choice is not a coincidence.
+- **Around the edges.** Two cats. Eat the same handful of meals on repeat (grilled cheese pulls more weight than it should). Drink exclusively Reign Storm Clean Energy, which I now have to hunt for because nobody stocks it anymore.
+- **Favorite color.** Green.
 
 ## Daily tooling
 VS Code paired with Claude Code as the actual dev harness. Hermes Agent runs alongside with a Telegram gateway so I can hand Codex the low-visibility tasks (calendar maintenance, config updates) without sitting in front of a screen for them. Formerly a Cursor user.
