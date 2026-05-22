@@ -2,3 +2,6 @@ allowBuilds:
   sharp: true
 patchedDependencies:
   '@met4citizen/talkinghead@1.7.0': patches/@met4citizen__talkinghead@1.7.0.patch
+overrides:
+  postcss@<8.5.10: '>=8.5.10'
+  three: ^0.184.0
