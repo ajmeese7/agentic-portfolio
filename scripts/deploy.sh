@@ -13,6 +13,11 @@
 
 set -euo pipefail
 
+# Marks the shell as non-interactive for tools that would otherwise prompt.
+# pnpm 9+ aborts node_modules purges without a TTY unless CI=true is set, which
+# breaks deploys under systemd. See ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY.
+export CI=true
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
