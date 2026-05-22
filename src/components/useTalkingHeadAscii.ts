@@ -315,7 +315,14 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           lightAmbientIntensity: settings.lightAmbient,
           lightDirectColor: 0xffffff,
           lightDirectIntensity: settings.lightDirect,
-          modelPixelRatio: 1,
+          // Match canvas resolution to device pixels so the ASCII shader's
+          // cell count stays consistent across DPRs. Without this the
+          // renderer would always draw at 1 DPR while `uCellSize` is
+          // multiplied by DPR below — on a phone (DPR≈3) that produces ~14
+          // huge cells instead of ~42 fine ones, and the avatar reads as
+          // sparse noise. resize() also re-applies setPixelRatio so the
+          // ratio tracks monitor / zoom changes.
+          modelPixelRatio: typeof window !== "undefined" ? window.devicePixelRatio : 1,
           modelFPS: 30,
           avatarIdleEyeContact: 0.2,
           avatarSpeakingEyeContact: 0.5,
@@ -431,6 +438,11 @@ export function useTalkingHeadAscii(settings: AsciiSettings): UseTalkingHeadAsci
           const w = container.clientWidth;
           const h = container.clientHeight;
           if (w === 0 || h === 0) return;
+          // Keep the renderer's pixel ratio glued to the device's. setSize
+          // with `false` leaves the canvas CSS size to our 100%/100% rule;
+          // internally THREE multiplies by the pixel ratio so the backing
+          // buffer is in device pixels.
+          head.renderer.setPixelRatio(window.devicePixelRatio);
           head.renderer.setSize(w, h, false);
           composer.setSize(w, h);
           head.camera.aspect = w / h;
