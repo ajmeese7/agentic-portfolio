@@ -12,8 +12,7 @@ export const projects: Project[] = [
   {
     slug: "readme-ascii",
     title: "readme-ascii",
-    blurb:
-      "Turns text into ASCII-art images for GitHub READMEs. The banner above? Built with this.",
+    blurb: "Web frontend using Figlet.js to turn text into ASCII-art images for GitHub READMEs.",
     tags: ["JavaScript", "ASCII", "GitHub"],
     stars: 86,
     repo: "https://github.com/ajmeese7/readme-ascii",
