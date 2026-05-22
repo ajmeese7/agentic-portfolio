@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Project } from "@/lib/projects";
 
 export function ProjectsCarousel({ projects }: { projects: Project[] }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start", duration: 18 });
   const [selected, setSelected] = useState(0);
   const [visibleProjects, setVisibleProjects] = useState(projects);
 
@@ -78,45 +78,47 @@ export function ProjectsCarousel({ projects }: { projects: Project[] }) {
       </header>
 
       <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex gap-4">
+        <div className="flex -ml-4">
           {visibleProjects.map((p) => (
             <article
               key={p.slug}
-              className="min-w-0 shrink-0 grow-0 basis-full sm:basis-1/2 lg:basis-1/3 border border-border-default rounded p-5 hover:border-accent/60 transition-colors"
+              className="min-w-0 shrink-0 grow-0 basis-full sm:basis-1/2 lg:basis-1/3 pl-4"
             >
-              <div className="flex items-baseline justify-between">
-                <h3 className="text-foreground text-base">{p.title}</h3>
-                {p.stars !== undefined && <span className="text-accent text-xs">{p.stars}★</span>}
-              </div>
-              <p className="text-muted text-sm mt-2 leading-relaxed">{p.blurb}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {p.tags.map((t) => (
-                  <span key={t} className="text-[10px] uppercase tracking-wider text-muted">
-                    [{t}]
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-4 mt-4 text-xs">
-                {p.live && (
-                  <a
-                    href={p.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent hover:underline"
-                  >
-                    live ↗
-                  </a>
-                )}
-                {p.repo && (
-                  <a
-                    href={p.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent hover:underline"
-                  >
-                    repo ↗
-                  </a>
-                )}
+              <div className="h-full border border-border-default rounded p-5 hover:border-accent/60 transition-colors">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="text-foreground text-base">{p.title}</h3>
+                  {p.stars !== undefined && <span className="text-accent text-xs">{p.stars}★</span>}
+                </div>
+                <p className="text-muted text-sm mt-2 leading-relaxed">{p.blurb}</p>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {p.tags.map((t) => (
+                    <span key={t} className="text-[10px] uppercase tracking-wider text-muted">
+                      [{t}]
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-4 mt-4 text-xs">
+                  {p.live && (
+                    <a
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      live ↗
+                    </a>
+                  )}
+                  {p.repo && (
+                    <a
+                      href={p.repo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      repo ↗
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           ))}

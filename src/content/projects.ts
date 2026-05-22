@@ -52,7 +52,7 @@ export const projects: Project[] = [
     stars: 1,
     repo: "https://github.com/ajmeese7/tools",
   },
-   {
+  {
     slug: "design-experiments",
     title: "design-experiments",
     blurb: "Experimental design concepts to explore creative visual representation.",
