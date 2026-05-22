@@ -45,6 +45,18 @@ pnpm start
 
 `pnpm start` serves the built output on port 3000 by default. Override with `PORT=4000 pnpm start`.
 
+## LLM backend
+
+The chat route hits any OpenAI-compatible `/chat/completions` endpoint. `DeepSeek` is the zero-config default since it's the cheapest hosted option that actually answers well; nothing else has to change for a deployment.
+
+1. Grab a key from [platform.deepseek.com](https://platform.deepseek.com/api_keys).
+2. Set `LLM_API_KEY=sk-...` in `.env.local` (or your host's secret store).
+3. Leave `LLM_BASE_URL` and `LLM_MODEL` blank — they default to `https://api.deepseek.com/v1` and `deepseek-chat`.
+
+That's it. Restart `pnpm dev` / redeploy and the avatar starts answering.
+
+To use something else, set both `LLM_BASE_URL` and `LLM_MODEL` explicitly; see `.env.local.example` for OpenAI, Ollama, LM Studio, OpenRouter, and Groq snippets. For reasoning models (e.g. `deepseek-reasoner`, Qwen3, R1), the route strips chain-of-thought by default; set `LLM_DISABLE_THINKING=false` to keep it on for servers that honor `chat_template_kwargs`.
+
 ## Quality gates
 
 ```sh

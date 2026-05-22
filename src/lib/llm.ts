@@ -75,16 +75,41 @@ export type LlmConfig = {
   disableThinking: boolean;
 };
 
+// DeepSeek is the zero-config default for hosted deployments: cheapest
+// OpenAI-compatible option, no reasoning chatter on deepseek-chat. Drop in
+// LLM_API_KEY=sk-... and the rest of the wiring just works. Override
+// LLM_BASE_URL/LLM_MODEL to point at any other provider.
+const DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1";
+const DEEPSEEK_DEFAULT_MODEL = "deepseek-chat";
+
 export function getLlmConfig(): LlmConfig | null {
-  const baseUrl = process.env.LLM_BASE_URL;
-  const model = process.env.LLM_MODEL;
-  const apiKey = process.env.LLM_API_KEY ?? "sk-no-key-required";
-  if (!baseUrl || !model) return null;
+  const explicitBaseUrl = process.env.LLM_BASE_URL;
+  const explicitModel = process.env.LLM_MODEL;
+  const apiKey = process.env.LLM_API_KEY;
+
+  let baseUrl: string;
+  let model: string;
+  let resolvedApiKey: string;
+
+  if (explicitBaseUrl) {
+    if (!explicitModel) return null;
+    baseUrl = explicitBaseUrl;
+    model = explicitModel;
+    // Local servers (llama.cpp, Ollama, LM Studio) often don't auth.
+    resolvedApiKey = apiKey ?? "sk-no-key-required";
+  } else if (apiKey) {
+    baseUrl = DEEPSEEK_BASE_URL;
+    model = explicitModel ?? DEEPSEEK_DEFAULT_MODEL;
+    resolvedApiKey = apiKey;
+  } else {
+    return null;
+  }
+
   // Reasoning models (Qwen3, DeepSeek-R1, etc.) burn latency + tokens on a
   // chain-of-thought we never display. Off by default for snappy chat;
   // set LLM_DISABLE_THINKING=false to leave reasoning enabled.
   const disableThinking = (process.env.LLM_DISABLE_THINKING ?? "true").toLowerCase() !== "false";
-  return { baseUrl: baseUrl.replace(/\/$/, ""), apiKey, model, disableThinking };
+  return { baseUrl: baseUrl.replace(/\/$/, ""), apiKey: resolvedApiKey, model, disableThinking };
 }
 
 // Streams the upstream OpenAI-compatible /chat/completions response and

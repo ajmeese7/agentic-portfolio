@@ -6,9 +6,8 @@ import { buildSystemPrompt, type ChatMessage, getLlmConfig, streamChat } from "@
 export const runtime = "nodejs";
 
 const PLACEHOLDER_REPLY = [
-  "conversation mode is wired up but no model is connected.",
-  "set LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL in .env.local and i'll start answering for real.",
-  "any openai-compatible endpoint works — openai, ollama, lm studio, openrouter, groq, vllm.",
+  "the clone is offline. chat endpoint is wired up, no model behind it.",
+  "self-hosting? drop LLM_API_KEY into .env.local and i'm back. deepseek is the zero-config default; point LLM_BASE_URL + LLM_MODEL elsewhere for any other openai-compatible backend (ollama, lm studio, openrouter, groq, vllm).",
 ].join("\n\n");
 
 function streamPlaceholder(): Response {
