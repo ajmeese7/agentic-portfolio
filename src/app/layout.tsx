@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: "Aaron Meese",
   description: "making complex systems work smarter, not harder. ex-blue-team, now full-stack.",
   metadataBase: new URL("https://meese.dev"),
+  icons: {
+    icon: "/favicon.png",
+  },
   openGraph: {
     title: "Aaron Meese",
     description: "developer with a background in cybersecurity and systems tooling, between roles",
