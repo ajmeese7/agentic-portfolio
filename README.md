@@ -32,7 +32,7 @@ pnpm dev
 
 Defaults to `http://localhost:3000`. If 3000 is taken, Next picks the next free port and prints it.
 
-LAN access (phone, other machine on the same network) requires the firewall to allow the dev port. The allowed network IP is currently hardcoded in `next.config.ts` (`allowedDevOrigins`); update it if your LAN IP changes.
+LAN access (phone, other machine on the same network) requires the firewall to allow the dev port. Add your LAN IPs to `ALLOWED_DEV_ORIGINS` in `.env.local` (comma-separated); loopback origins are always allowed.
 
 ## Build
 
@@ -73,5 +73,4 @@ No test suite yet.
 ## Known gotchas
 
 - **npm/yarn break the avatar.** Use pnpm so the TalkingHead patch applies.
-- **LAN access needs UFW open** for whichever port `pnpm dev` lands on.
-- **Hardcoded LAN IP** in `next.config.ts:4`. Swap for a subnet match or env var when this gets annoying.
+- **LAN access needs UFW open** for whichever port `pnpm dev` lands on, and the device's IP added to `ALLOWED_DEV_ORIGINS` in `.env.local`.
