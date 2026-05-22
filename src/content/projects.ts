@@ -2,24 +2,6 @@ import type { Project } from "@/lib/projects";
 
 export const projects: Project[] = [
   {
-    slug: "termblog",
-    title: "termblog",
-    blurb: "Self-hosted, terminal-themed blogging platform written in Go.",
-    tags: ["Go", "Self-hosted", "Blog"],
-    stars: 2,
-    repo: "https://github.com/ajmeese7/termblog",
-    live: "https://termblog.com",
-  },
-  {
-    slug: "hermes-multi-user-skill",
-    title: "hermes-multi-user",
-    blurb: "Enable multiple Hermes Agent personalities, cementing OpenClaw feature parity.",
-    tags: ["Hermes Agent", "Skill"],
-    stars: 7,
-    repo: "https://github.com/ajmeese7/hermes-multi-user-skill",
-    live: "https://blog.aaronmeese.com/how-i-set-up-multi-user-ai-agents-with-hermes-and-you-can-too-648b52fe20e9",
-  },
-  {
     slug: "local-llms",
     title: "local-llms",
     blurb: "Practical local model usage, tooling, and infrastructure.",
@@ -36,6 +18,24 @@ export const projects: Project[] = [
     stars: 86,
     repo: "https://github.com/ajmeese7/readme-ascii",
     live: "https://ajmeese7.github.io/readme-ascii/",
+  },
+  {
+    slug: "hermes-multi-user-skill",
+    title: "hermes-multi-user",
+    blurb: "Enable multiple Hermes Agent personalities, cementing OpenClaw feature parity.",
+    tags: ["Hermes Agent", "Skill"],
+    stars: 7,
+    repo: "https://github.com/ajmeese7/hermes-multi-user-skill",
+    live: "https://blog.aaronmeese.com/how-i-set-up-multi-user-ai-agents-with-hermes-and-you-can-too-648b52fe20e9",
+  },
+  {
+    slug: "termblog",
+    title: "termblog",
+    blurb: "Self-hosted, terminal-themed blogging platform written in Go.",
+    tags: ["Go", "Self-hosted", "Blog"],
+    stars: 2,
+    repo: "https://github.com/ajmeese7/termblog",
+    live: "https://termblog.com",
   },
   {
     slug: "reading-log",
