@@ -11,8 +11,19 @@ Interact with a digital clone of me. Next.js app rendering a live ASCII portrait
 
 ## Requirements
 
-- Node.js 22+ (developed on 22.22.0)
+- Node.js 22+ (developed on 22.22.0). The exact version is pinned in `.nvmrc`.
 - pnpm 10+ (developed on 10.33.2). The repo uses `pnpm` patches via `pnpm-workspace.yaml`, so npm/yarn will skip the patch and ship a broken TalkingHead build.
+
+### NVM (multi-Node machines)
+
+If you juggle several Node versions, [NVM](https://github.com/nvm-sh/nvm) reads `.nvmrc` automatically:
+
+```sh
+nvm install   # installs the version in .nvmrc if it isn't already present
+nvm use       # activates it for the current shell
+```
+
+To switch automatically when you `cd` into the repo, see [NVM's deeper shell integration](https://github.com/nvm-sh/nvm#deeper-shell-integration). The production `scripts/deploy.sh` sources NVM and runs `nvm use` itself, so systemd units don't need to inherit your shell config.
 
 ## Install
 
@@ -44,6 +55,35 @@ pnpm start
 ```
 
 `pnpm start` serves the built output on port 3000 by default. Override with `PORT=4000 pnpm start`.
+
+## Production (systemd + PM2)
+
+For a long-lived deployment, `scripts/deploy.sh` is the entry point. It:
+
+1. Sources NVM, runs `nvm install` / `nvm use` against `.nvmrc`.
+2. `pnpm install --frozen-lockfile` and `pnpm build`.
+3. Hands the process off to PM2 via `ecosystem.config.js`, with logs at `logs/pm2-{out,error}.log`.
+
+Run it directly:
+
+```sh
+./scripts/deploy.sh             # fetches origin/master, rebuilds, restarts PM2
+./scripts/deploy.sh --no-reset  # keep local changes (dev mode)
+AGENTIC_PORTFOLIO_DEV_MODE=true ./scripts/deploy.sh  # same as --no-reset, env-style
+```
+
+Env files: Next.js reads `.env.production.local` automatically during `next start`. Put `LLM_API_KEY` and any other secrets there on the server (not in `.env.local`, which Next ignores in production).
+
+To run it under systemd (oneshot unit → `deploy.sh` → PM2) with logrotate hooked into PM2 reload, see the matching configs in [`server-config`](https://github.com/meese-enterprises/server-config) (`systemd/agentic-portfolio.service`, `logrotate/agentic-portfolio`, deployed by `scripts/setup_services.sh`). The pattern mirrors the meeseOS service in the same repo.
+
+Service ops cheat sheet (after the unit is installed):
+
+```sh
+sudo systemctl start agentic-portfolio       # triggers deploy.sh
+sudo journalctl -u agentic-portfolio -f      # deploy.sh stdout/stderr
+pm2 logs agentic-portfolio                   # app runtime logs (HTTP, errors)
+tail -f logs/pm2-out.log logs/pm2-error.log  # same logs, on disk
+```
 
 ## LLM backend
 
@@ -77,7 +117,8 @@ No test suite yet.
   - `buildCharacterAtlas.ts` — generates the glyph atlas at runtime.
 - `public/avatar.glb` — meshopt-compressed 3D model the avatar renders from.
 - `assets/avatar.source.glb` — uncompressed source. Regenerate `public/avatar.glb` via `pnpm compress:avatar`.
-- `scripts/` — build helpers (currently just the avatar compression script).
+- `scripts/` — build/deploy helpers (`deploy.sh` for production, `compress-avatar.mjs` for asset prep).
+- `ecosystem.config.js` — PM2 process config used by `scripts/deploy.sh`.
 - `patches/` — pnpm-managed patches for upstream deps.
 - `docs/controls.md` — runtime interactions and edit-time tuning knobs.
 - `reference/` — local-only ground-truth clone of the visual target. Gitignored.
