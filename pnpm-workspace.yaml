@@ -1,5 +1,5 @@
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
   sharp: true
 patchedDependencies:
   '@met4citizen/talkinghead@1.7.0': patches/@met4citizen__talkinghead@1.7.0.patch
