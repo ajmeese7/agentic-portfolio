@@ -26,13 +26,13 @@ export default function TalkingHeadAscii({ ref }: TalkingHeadAsciiProps) {
   }
 
   return (
-    <>
+    <div className="relative w-full h-full">
       <div ref={containerRef} className="ascii-stage" />
       {status.kind !== "ready" && (
         <div className="ascii-overlay" role="status">
           {status.kind === "init" ? "booting…" : `loading ${Math.round(status.pct)}%`}
         </div>
       )}
-    </>
+    </div>
   );
 }
