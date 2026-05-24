@@ -23,7 +23,7 @@ export const projects: Project[] = [
     title: "hermes-multi-user",
     blurb: "Enable multiple Hermes Agent personalities, cementing OpenClaw feature parity.",
     tags: ["Hermes Agent", "Skill"],
-    stars: 7,
+    stars: 11,
     repo: "https://github.com/ajmeese7/hermes-multi-user-skill",
     live: "https://blog.aaronmeese.com/how-i-set-up-multi-user-ai-agents-with-hermes-and-you-can-too-648b52fe20e9",
   },
