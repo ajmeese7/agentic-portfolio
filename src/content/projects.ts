@@ -14,7 +14,7 @@ export const projects: Project[] = [
     title: "readme-ascii",
     blurb: "Web frontend using Figlet.js to turn text into ASCII-art images for GitHub READMEs.",
     tags: ["JavaScript", "ASCII", "GitHub"],
-    stars: 86,
+    stars: 89,
     repo: "https://github.com/ajmeese7/readme-ascii",
     live: "https://ajmeese7.github.io/readme-ascii/",
   },
