@@ -111,6 +111,16 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
                     live ↗
                   </a>
                 )}
+                {p.blog && (
+                  <a
+                    href={p.blog}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:underline"
+                  >
+                    blog ↗
+                  </a>
+                )}
                 {p.repo && (
                   <a
                     href={p.repo}
