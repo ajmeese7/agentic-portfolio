@@ -1,3 +1,4 @@
+// Currently unused - kept for potential reuse
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";

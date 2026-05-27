@@ -110,7 +110,7 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
           const copy = cur.slice();
           copy[copy.length - 1] = {
             role: "assistant",
-            content: "[chat backend unreachable — check LLM_BASE_URL]",
+            content: "[chat backend unreachable, check LLM_BASE_URL]",
           };
           return copy;
         });
@@ -140,7 +140,7 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
               key={p}
               type="button"
               onClick={() => send(p)}
-              className="w-full text-left px-3 py-3 text-sm text-foreground hover:text-accent hover:bg-foreground/5 transition-colors"
+              className="cursor-pointer w-full text-left px-3 py-3 text-sm text-foreground hover:text-accent hover:bg-foreground/5 transition-colors"
             >
               ↳ {p}
             </button>
