@@ -5,7 +5,7 @@ export const projects: Project[] = [
     slug: "local-llms",
     title: "local-llms",
     blurb: "Practical local model usage, tooling, and infrastructure.",
-    tags: ["Python", "Local LLMs", "Tooling"],
+    tags: ["Python", "LLMs", "Tooling"],
     stars: 1,
     repo: "https://github.com/ajmeese7/local-llms",
   },
