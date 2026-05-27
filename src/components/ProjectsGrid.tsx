@@ -3,9 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Project } from "@/lib/projects";
 
+const PAGE_SIZE = 6;
+
 export function ProjectsGrid({ projects }: { projects: Project[] }) {
   const [visibleProjects, setVisibleProjects] = useState(projects);
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [limit, setLimit] = useState(PAGE_SIZE);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,10 +59,10 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
         </h2>
       </header>
 
-      <div className="flex flex-wrap gap-2 mb-6 px-1">
+      <div className="hidden sm:flex flex-wrap gap-2 mb-6 px-1">
         <button
           type="button"
-          onClick={() => setActiveTag(null)}
+          onClick={() => { setActiveTag(null); setLimit(PAGE_SIZE); }}
           className={`cursor-pointer text-[10px] uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
             activeTag === null
               ? "border-accent text-accent"
@@ -72,7 +75,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           <button
             key={tag}
             type="button"
-            onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+            onClick={() => { setActiveTag(activeTag === tag ? null : tag); setLimit(PAGE_SIZE); }}
             className={`cursor-pointer text-[10px] uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
               activeTag === tag
                 ? "border-accent text-accent"
@@ -85,7 +88,7 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sorted.map((p) => (
+        {sorted.slice(0, limit).map((p) => (
           <article key={p.slug}>
             <div className="h-full border border-border-default rounded p-5 hover:border-accent/60 transition-colors">
               <div className="flex items-baseline justify-between">
@@ -136,6 +139,16 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           </article>
         ))}
       </div>
+
+      {limit < sorted.length && (
+        <button
+          type="button"
+          onClick={() => setLimit((prev) => prev + PAGE_SIZE)}
+          className="cursor-pointer mt-6 mx-auto block text-xs text-muted hover:text-accent border border-border-default hover:border-accent/60 rounded px-4 py-2 transition-colors"
+        >
+          show more ({sorted.length - limit} remaining)
+        </button>
+      )}
     </section>
   );
 }

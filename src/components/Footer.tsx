@@ -9,8 +9,8 @@ const links = [
 export function Footer() {
   return (
     <footer className="border-t border-border-default mt-24 py-10 text-sm text-muted">
-      <div className="mx-auto max-w-3xl px-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <nav className="flex flex-wrap gap-x-6 gap-y-2">
+      <div className="mx-auto max-w-3xl px-6 flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 sm:justify-start">
           {links.map((l) => (
             <a
               key={l.label}
@@ -23,7 +23,7 @@ export function Footer() {
             </a>
           ))}
         </nav>
-        <span className="whitespace-nowrap">designed &amp; built by Aaron Meese</span>
+        <span className="whitespace-nowrap text-center">designed &amp; built by Aaron Meese</span>
       </div>
     </footer>
   );
