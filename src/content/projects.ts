@@ -61,6 +61,14 @@ export const projects: Project[] = [
     repo: "https://github.com/ajmeese7/reading-log",
   },
   {
+    slug: "redirect-tracker",
+    title: "Redirect Chain Analyzer",
+    blurb: "Log articles I consume to an RSS feed via Cloudflare Workers.",
+    tags: ["Cyber", "CTI", "Tooling", "Python"],
+    stars: 3,
+    repo: "https://github.com/meese-enterprises/redirect-tracker",
+  },
+  {
     slug: "tools",
     title: "tools",
     blurb: "Assortment of boutique useful scripts worth sharing.",
