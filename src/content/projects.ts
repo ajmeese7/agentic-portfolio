@@ -30,7 +30,7 @@ export const projects: Project[] = [
   {
     slug: "gpu-browser-bridge",
     title: "gpu-browser-bridge",
-    blurb: "HTTP API that wraps a GPU-backed Chrome on Windows, letting headless callers take screenshots and run JS against real WebGPU/WebGL code paths over an SSH tunnel.",
+    blurb: "HTTP API that wraps a GPU-backed Chrome on Windows.",
     tags: ["SSH", "Go", "Tooling"],
     stars: 2,
     repo: "https://github.com/ajmeese7/gpu-browser-bridge",
