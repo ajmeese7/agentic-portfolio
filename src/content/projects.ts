@@ -44,6 +44,14 @@ export const projects: Project[] = [
     repo: "https://github.com/ajmeese7/github-spy",
   },
   {
+    slug: "gitea-signoff",
+    title: "gitea-signoff",
+    blurb: "Local CI workflow that signs off on your own work.",
+    tags: ["Gitea", "CI", "Version Control"],
+    stars: 1,
+    repo: "https://github.com/ajmeese7/gitea-signoff",
+  },
+  {
     slug: "termblog",
     title: "termblog",
     blurb: "Self-hosted, terminal-themed blogging platform written in Go.",
