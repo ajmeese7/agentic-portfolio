@@ -1,6 +1,9 @@
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import partial from "./__fixtures__/index-partial.json";
+import real from "./__fixtures__/index-v1.json";
+import future from "./__fixtures__/index-v2-future.json";
 import {
   fetchWritingIndex,
   getWritingIndex,
@@ -8,9 +11,6 @@ import {
   resetWritingIndexCache,
   SUPPORTED_VERSION,
 } from "./writing-index";
-import partial from "./__fixtures__/index-partial.json";
-import future from "./__fixtures__/index-v2-future.json";
-import real from "./__fixtures__/index-v1.json";
 
 /**
  * Fetch cases run against a real HTTP server on an ephemeral port rather than
@@ -96,13 +96,14 @@ describe("parseWritingIndex", () => {
   });
 
   it("drops malformed entries instead of losing the whole catalog", () => {
-    // Arrange: fixture holds one good entry, one missing url, one non-object.
+    // Arrange: fixture holds one good entry (the real catalog's first), one
+    // missing url, and one that is not an object at all.
     // Act
     const index = parseWritingIndex(partial);
 
     // Assert
     expect(index?.count).toBe(1);
-    expect(index?.entries[0].slug).toBe(partial.items[0].slug);
+    expect(index?.entries[0].slug).toBe(real.items[0].slug);
   });
 
   it.each([
