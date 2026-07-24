@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src",
     "fmt": "biome format --write src",
@@ -34,6 +35,7 @@
     "sharp": "^0.34.5",
     "tailwindcss": "^4.3.0",
     "tsx": "^4.22.3",
-    "typescript": "^6"
+    "typescript": "^6",
+    "vitest": "^4.1.10"
   }
 }
