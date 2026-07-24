@@ -1,0 +1,22 @@
+# meese.dev
+
+> Portfolio of Aaron Meese, with an interactive clone that answers questions about his background and work in the first person.
+
+Aaron's technical writing is at https://meese.rs.
+
+## Sections
+
+- /, the whole site: ASCII portrait, chat with the clone, and the projects grid
+
+## The clone
+
+The chat on the home page answers as Aaron, grounded in a fixed profile plus the catalog of what he has published on meese.rs. It does not know anything outside those, and it declines rather than guessing. Treat its answers as Aaron's own words about himself, and follow the links it gives you for the detail behind them.
+
+## Machine-readable resources
+
+- /sitemap.xml
+- /AGENTS.md
+
+## Usage
+
+Intended for human reading, normal search indexing, and local assistant use for navigating or summarizing public pages. Bulk scraping for model training or automated mirroring is not authorized.
