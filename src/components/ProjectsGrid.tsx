@@ -62,7 +62,10 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
       <div className="hidden sm:flex flex-wrap gap-2 mb-6 px-1">
         <button
           type="button"
-          onClick={() => { setActiveTag(null); setLimit(PAGE_SIZE); }}
+          onClick={() => {
+            setActiveTag(null);
+            setLimit(PAGE_SIZE);
+          }}
           className={`cursor-pointer text-[10px] uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
             activeTag === null
               ? "border-accent text-accent"
@@ -75,7 +78,10 @@ export function ProjectsGrid({ projects }: { projects: Project[] }) {
           <button
             key={tag}
             type="button"
-            onClick={() => { setActiveTag(activeTag === tag ? null : tag); setLimit(PAGE_SIZE); }}
+            onClick={() => {
+              setActiveTag(activeTag === tag ? null : tag);
+              setLimit(PAGE_SIZE);
+            }}
             className={`cursor-pointer text-[10px] uppercase tracking-wider px-2 py-1 rounded border transition-colors ${
               activeTag === tag
                 ? "border-accent text-accent"

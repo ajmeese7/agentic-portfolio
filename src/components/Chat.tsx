@@ -122,6 +122,10 @@ export function Chat({ onResponseComplete }: ChatProps = {}) {
   );
 
   // Stick to the bottom on every token so the streaming reply stays in view.
+  // `messages` is the trigger here, not an input: the body never reads it, so
+  // the rule sees it as surplus, but dropping it would leave this running once
+  // on mount and the view would stop following the stream.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: trigger, not input
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
