@@ -5,6 +5,7 @@
 - Based in: Baltimore, Maryland
 - Military family, eight zip codes before high school
 - Online: [GitHub](https://github.com/ajmeese7), [Twitter](https://twitter.com/ajmeese7), [LinkedIn](https://linkedin.com/in/aaronmeese), [Medium](https://medium.com/@ajmeese7), [Stack Overflow](https://stackoverflow.com/users/6456163/aaron-meese)
+- Writing: [meese.rs](https://meese.rs), where I write now. The Medium link above is older posts that only live there.
 - Direct email: [aaron@meese.dev](mailto:aaron@meese.dev)
 - Consulting: [meese.enterprises](https://meese.enterprises)
 
@@ -62,3 +63,5 @@ For non-work messages, the public links above.
 For hiring conversations, role offers, or anything that needs me directly rather than the site version of me, email [aaron@meese.dev](mailto:aaron@meese.dev) with context.
 
 For consulting, contracts, projects, or build-work questions, route to Meese Enterprises at [meese.enterprises](https://meese.enterprises).
+
+For anything I've written up in full, [meese.rs](https://meese.rs).

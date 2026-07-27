@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "site": "https://meese.rs/",
+  "count": 8,
+  "items": [
+    {
+      "slug": "nobody-gives-away-rss-to-email",
+      "title": "Nobody gives away RSS-to-email",
+      "description": "RSS-to-email is a paid add-on at every reputable provider, so mine runs on the Cloudflare Worker that already fronts the site. D1 holds the list, Resend sends, and an hourly cron diffs the feed.",
+      "url": "https://meese.rs/posts/nobody-gives-away-rss-to-email/",
+      "date": "2026-07-23T00:00:00.000Z",
+      "type": "devlog",
+      "topics": [
+        "publishing",
+        "static-sites",
+        "developer-experience"
+      ],
+      "tags": [
+        "cloudflare-workers",
+        "d1",
+        "resend",
+        "rss",
+        "newsletter",
+        "buttondown",
+        "wrangler",
+        "bimi",
+        "email-deliverability"
+      ],
+      "repo": "https://github.com/ajmeese7/meese.rs"
+    },
+    {
+      "slug": "analytics-for-readers-who-block-analytics",
+      "title": "Analytics for readers who block analytics",
+      "description": "Pageviews are arrivals, not reads. Wiring PostHog through a same-domain Worker proxy on a static site, a custom read-completion event, and the headless-browser gotcha that ate a debugging session.",
+      "url": "https://meese.rs/posts/analytics-for-readers-who-block-analytics/",
+      "date": "2026-07-21T00:00:00.000Z",
+      "type": "devlog",
+      "topics": [
+        "static-sites",
+        "publishing",
+        "analytics"
+      ],
+      "tags": [
+        "posthog",
+        "cloudflare-workers",
+        "adblock"
+      ],
+      "repo": "https://github.com/ajmeese7/meese.rs"
+    },
+    {
+      "slug": "automating-data-broker-removals-with-unbroker",
+      "title": "Trying to automate data-broker removals with Hermes",
+      "description": "Unbroker scanned 51 people-search sites and tracked every case. One real run also showed how quickly Cloudflare, account gates, and browser identity push the removal work back to a human.",
+      "url": "https://meese.rs/posts/automating-data-broker-removals-with-unbroker/",
+      "date": "2026-07-20T00:00:00.000Z",
+      "type": "lab",
+      "topics": [
+        "privacy",
+        "agents"
+      ],
+      "tags": [
+        "hermes-agent",
+        "unbroker",
+        "data-brokers",
+        "browser-automation",
+        "osint"
+      ]
+    },
+    {
+      "slug": "stopping-the-model-from-writing",
+      "title": "Two days to make the model write my resume, seven weeks to make it stop",
+      "description": "A corpus the agent may only select from, and a build whose only job is to refuse.",
+      "url": "https://meese.rs/posts/stopping-the-model-from-writing/",
+      "date": "2026-07-17T00:00:00.000Z",
+      "type": "essay",
+      "topics": [
+        "ai-devtools",
+        "agents"
+      ],
+      "tags": [
+        "claude-code",
+        "typst",
+        "yaml",
+        "ats",
+        "knowledge-base",
+        "career-ops",
+        "ai-job-search"
+      ]
+    },
+    {
+      "slug": "medium-rss-for-agent-context",
+      "title": "Feed your AI agent your Medium writing",
+      "description": "Your published articles are great agent context, but the article URLs bounce through Medium's login redirect. The public RSS feed hands over the full text with no auth, so any agent that can fetch a URL can read your public catalog.",
+      "url": "https://meese.rs/posts/medium-rss-for-agent-context/",
+      "date": "2026-06-17T00:00:00.000Z",
+      "type": "guide",
+      "topics": [
+        "ai-devtools",
+        "agents",
+        "publishing"
+      ],
+      "tags": [
+        "rss",
+        "medium",
+        "context"
+      ]
+    },
+    {
+      "slug": "review-ponytail",
+      "title": "Ponytail",
+      "description": "A Claude Code skill with a genuinely good idea buried under a delivery so noisy it earns a skip. It makes the agent reach for the smallest change that works, then shouts about itself every session to do it.",
+      "url": "https://meese.rs/posts/review-ponytail/",
+      "date": "2026-06-17T00:00:00.000Z",
+      "type": "review",
+      "topics": [
+        "ai-devtools",
+        "agents",
+        "developer-experience"
+      ],
+      "tags": [
+        "ponytail",
+        "claude-code",
+        "skills"
+      ]
+    },
+    {
+      "slug": "an-ant-is-too-small-for-one-drag-coefficient",
+      "title": "An ant is too small to have one drag coefficient",
+      "description": "An engineer friend pushed on the single drag coefficient from the last ant post. Pinning down that one assumption took three Reynolds numbers and a boundary layer, and the answer barely moved.",
+      "url": "https://meese.rs/posts/an-ant-is-too-small-for-one-drag-coefficient/",
+      "date": "2026-06-15T00:00:00.000Z",
+      "type": "lab",
+      "topics": [
+        "biomechanics",
+        "physics",
+        "modeling"
+      ],
+      "tags": [
+        "ants",
+        "drag",
+        "aerodynamics",
+        "boundary-layer",
+        "simulation"
+      ]
+    },
+    {
+      "slug": "wind-to-move-an-ant",
+      "title": "How much wind does it take to blow an ant off a wall?",
+      "description": "I went looking for the gap between floor, wall, and ceiling. The grip numbers had a different answer than I expected.",
+      "url": "https://meese.rs/posts/wind-to-move-an-ant/",
+      "date": "2026-06-14T00:00:00.000Z",
+      "type": "lab",
+      "topics": [
+        "biomechanics",
+        "physics",
+        "modeling"
+      ],
+      "tags": [
+        "ants",
+        "adhesion",
+        "drag",
+        "simulation"
+      ]
+    }
+  ]
+}

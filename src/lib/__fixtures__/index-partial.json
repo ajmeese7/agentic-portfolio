@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "site": "https://meese.rs/",
+  "count": 3,
+  "items": [
+    {
+      "slug": "nobody-gives-away-rss-to-email",
+      "title": "Nobody gives away RSS-to-email",
+      "description": "RSS-to-email is a paid add-on at every reputable provider, so mine runs on the Cloudflare Worker that already fronts the site. D1 holds the list, Resend sends, and an hourly cron diffs the feed.",
+      "url": "https://meese.rs/posts/nobody-gives-away-rss-to-email/",
+      "date": "2026-07-23T00:00:00.000Z",
+      "type": "devlog",
+      "topics": [
+        "publishing",
+        "static-sites",
+        "developer-experience"
+      ],
+      "tags": [
+        "cloudflare-workers",
+        "d1",
+        "resend",
+        "rss",
+        "newsletter",
+        "buttondown",
+        "wrangler",
+        "bimi",
+        "email-deliverability"
+      ],
+      "repo": "https://github.com/ajmeese7/meese.rs"
+    },
+    {
+      "slug": "analytics-for-readers-who-block-analytics",
+      "title": "Analytics for readers who block analytics",
+      "description": "Pageviews are arrivals, not reads. Wiring PostHog through a same-domain Worker proxy on a static site, a custom read-completion event, and the headless-browser gotcha that ate a debugging session.",
+      "date": "2026-07-21T00:00:00.000Z",
+      "type": "devlog",
+      "topics": [
+        "static-sites",
+        "publishing",
+        "analytics"
+      ],
+      "tags": [
+        "posthog",
+        "cloudflare-workers",
+        "adblock"
+      ],
+      "repo": "https://github.com/ajmeese7/meese.rs"
+    },
+    "not an object"
+  ]
+}
