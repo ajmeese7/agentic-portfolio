@@ -5,9 +5,9 @@ const links = [
   { label: "email", href: "mailto:aaron@meese.dev" },
   { label: "writing", href: "https://meese.rs", me: true },
   { label: "github", href: "https://github.com/ajmeese7", me: true },
-  { label: "linkedin", href: "https://www.linkedin.com/in/aaronmeese/", me: true },
   { label: "twitter", href: "https://twitter.com/ajmeese7", me: true },
-  { label: "consulting", href: "https://meese.enterprises" },
+  //{ label: "linkedin", href: "https://www.linkedin.com/in/aaronmeese/", me: true },
+  //{ label: "consulting", href: "https://meese.enterprises" },
   //{ label: "resume", href: "/resume.pdf" },
 ];
 
