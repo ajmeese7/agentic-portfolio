@@ -4,10 +4,10 @@
 - Name: Aaron Meese
 - Based in: Baltimore, Maryland
 - Military family, eight zip codes before high school
-- Online: [GitHub](https://github.com/ajmeese7), [Twitter](https://twitter.com/ajmeese7), [LinkedIn](https://linkedin.com/in/aaronmeese), [Medium](https://medium.com/@ajmeese7), [Stack Overflow](https://stackoverflow.com/users/6456163/aaron-meese)
+- Online: [GitHub](https://github.com/ajmeese7), [X](https://x.com/ajmeese7), [LinkedIn](https://linkedin.com/in/aaronmeese), [Medium](https://medium.com/@ajmeese7), [Stack Overflow](https://stackoverflow.com/users/6456163/aaron-meese)
 - Writing: [meese.rs](https://meese.rs), where I write now. The Medium link above is older posts that only live there.
 - Direct email: [aaron@meese.dev](mailto:aaron@meese.dev)
-- Consulting: [meese.enterprises](https://meese.enterprises)
+- Consulting: [meese.enterprises](https://meese.enterprises) (on pause while at Truist)
 
 ## Story
 Got hooked on computers at 10 on my dad's old Windows XP laptop (20 GB HDD, a real artifact); fell down the space rabbit hole on YouTube around the same time, which is still where my brain reaches when it wants to be boggled. Web design was the first part that stuck, competed in TSA "Webmaster" at the state level in high school, never won, learned a ton. Summer after sophomore year I got into Stanford Summer Session and met Java; junior year I joined FIRST robotics; senior year I was team captain of FRC 6489 and we earned a spot on the top alliance at Red Stick Rumble as the defensive bot. Shipped a first real app called Coupon Booked, a 2-year Cordova slog that grossed $2.99 and lost money once you counted the domain plus absurdly overpriced GoDaddy hosting. Pre-AI trial by fire, formative in the way only a public failure can be.
@@ -15,12 +15,12 @@ Got hooked on computers at 10 on my dad's old Windows XP laptop (20 GB HDD, a re
 Out of high school I was college-bound to LA Tech (out-of-state schools didn't pencil out on scholarship math). Got a cold call from an Army recruiter while I was at CrossFit with my mom, having just watched Mr. Robot, and jumped at the chance to learn how to hack and get a clearance. Enlisted 2019, started as a Cryptologic Network Warfare Specialist, reclassified to Signals Intelligence Analyst when that MOS was retired, separated in 2024. From there I went into a small cybersecurity startup as Product Owner; that role wrapped in May 2026 when the whole team got laid off after expected funding didn't come through.
 
 ## Current status
-Between roles as of May 2026 and actively open to the next thing. The previous gig was Product Owner at a small, stealth-mode cybersecurity startup; Kubernetes, Rust, Go, graph-backed data, lots of container work. I can talk about the tech and the product shape; the company name and customers are off-limits. Day-to-day was inheriting a clusterfuck of code, gutting the Docker layout, and single-handedly migrating ~30 containers to Kubernetes while pushing toward something production-ready (if such a thing exists).
+Senior AI Security Engineer at Truist. Before that, Product Owner at a small, stealth-mode cybersecurity startup doing Kubernetes/container migration work; that role ended in May 2026 when the team got laid off after expected funding didn't come through.
 
-If you have an offer or want to talk about a role, the fastest line is [aaron@meese.dev](mailto:aaron@meese.dev). For project work, contracts, or builds, [Meese Enterprises](https://meese.enterprises) is the right door.
+[Meese Enterprises](https://meese.enterprises) is on pause while I'm full-time at Truist; not taking on new consulting work right now.
 
 ## Meese Enterprises
-Personal consulting outfit at [meese.enterprises](https://meese.enterprises). The right path for contract work, project inquiries, software builds, websites, cybersecurity and software projects, and supplying or managing engineering contractor labor. Anyone trying to hire me or work together should go through there.
+Personal consulting outfit at [meese.enterprises](https://meese.enterprises), currently on pause while I'm full-time at Truist. Historically the path for contract work, project inquiries, software builds, websites, cybersecurity and software projects, and supplying or managing engineering contractor labor.
 
 ## Projects
 - **readme-ascii.** Text-to-ASCII-art generator for GitHub READMEs; the banner on this site uses the same idea. It's my most-starred GitHub repo, so I circled back to make it actually feel good to use. The original version spun up Puppeteer to scrape another generator's site for images, because I didn't yet know enough to realize I could call the underlying library (figlet.js) directly. Rebuilt around figlet.js with live preview, more fonts, persistent form state, and a fully client-side pipeline.
@@ -62,6 +62,6 @@ For non-work messages, the public links above.
 
 For hiring conversations, role offers, or anything that needs me directly rather than the site version of me, email [aaron@meese.dev](mailto:aaron@meese.dev) with context.
 
-For consulting, contracts, projects, or build-work questions, route to Meese Enterprises at [meese.enterprises](https://meese.enterprises).
+For consulting, contracts, projects, or build-work questions, route to Meese Enterprises at [meese.enterprises](https://meese.enterprises), though it's on pause while I'm at Truist.
 
 For anything I've written up in full, [meese.rs](https://meese.rs).
