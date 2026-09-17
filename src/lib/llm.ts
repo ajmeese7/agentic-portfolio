@@ -168,6 +168,46 @@ export function getLlmConfig(): LlmConfig | null {
   return { baseUrl: baseUrl.replace(/\/$/, ""), apiKey: resolvedApiKey, model, disableThinking };
 }
 
+// Node's fetch throws a generic "fetch failed" TypeError for any connection-level
+// failure and buries the actual reason (ECONNREFUSED, DNS lookup, timeout, ...) in
+// `cause`, which can itself be an AggregateError wrapping several attempts.
+function findErrorCode(cause: unknown): string | undefined {
+  if (cause instanceof AggregateError) {
+    for (const inner of cause.errors) {
+      const code = findErrorCode(inner);
+      if (code) return code;
+    }
+    return undefined;
+  }
+  if (cause && typeof cause === "object" && "code" in cause) {
+    return String((cause as { code: unknown }).code);
+  }
+  return undefined;
+}
+
+/** Turns a thrown error from `streamChat` into a message safe to show a user. */
+export function describeUpstreamError(err: unknown): string {
+  if (!(err instanceof Error)) return "unknown error talking to the model server.";
+
+  if (err.message === "fetch failed") {
+    const code = findErrorCode((err as { cause?: unknown }).cause);
+    switch (code) {
+      case "ECONNREFUSED":
+        return "can't reach the model server, connection refused. is it running?";
+      case "ENOTFOUND":
+      case "EAI_AGAIN":
+        return "can't resolve the model server's address. check LLM_BASE_URL.";
+      case "ETIMEDOUT":
+      case "UND_ERR_CONNECT_TIMEOUT":
+        return "the model server didn't respond in time.";
+      default:
+        return "can't reach the model server. check LLM_BASE_URL and that it's running.";
+    }
+  }
+
+  return err.message;
+}
+
 // Streams the upstream OpenAI-compatible /chat/completions response and
 // yields plain text deltas (no SSE framing) so the client can append directly.
 export async function* streamChat(
