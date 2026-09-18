@@ -21,7 +21,7 @@ export function Hero({ banner }: HeroProps) {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_auto] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0 lg:items-start">
         <p className="text-muted text-sm sm:text-base lg:col-start-1 lg:row-start-1">
-          ↳ senior ai security engineer at truist.
+          ↳ making complex systems work smarter, not harder.
         </p>
 
         <div className="w-64 sm:w-72 md:w-80 mx-auto lg:mx-0 aspect-square lg:col-start-2 lg:row-start-1 lg:row-span-2">

@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const DESCRIPTION = "senior ai security engineer at truist.";
+const DESCRIPTION = "making complex systems work smarter, not harder.";
 const OG_IMAGE = {
   url: "/og-avatar.png",
   width: 1200,
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://meese.dev"),
   keywords: [
     "Aaron Meese",
-    "AI security engineer",
+    "full-stack developer",
     "cybersecurity",
     "systems engineering",
     "meese.dev",
