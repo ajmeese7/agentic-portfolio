@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import real from "./__fixtures__/index-v1.json";
-import { assembleSystemPrompt } from "./llm";
+import { assembleSystemPrompt, describeUpstreamError } from "./llm";
 import { parseWritingIndex } from "./writing-index";
+
+function fetchFailed(cause: unknown): Error {
+  const err = new Error("fetch failed");
+  return Object.assign(err, { cause });
+}
 
 const PROFILE = "# Aaron Meese\n\nSnapshot goes here.\n";
 
@@ -101,5 +106,46 @@ describe("assembleSystemPrompt with an index", () => {
 
     // Assert: the ceiling that decides when this switches to retrieval.
     expect(withIndex.length - without.length).toBeLessThan(16_000);
+  });
+});
+
+describe("describeUpstreamError", () => {
+  it("explains a refused connection", () => {
+    const message = describeUpstreamError(fetchFailed({ code: "ECONNREFUSED" }));
+    expect(message).toContain("connection refused");
+  });
+
+  it("explains a DNS lookup failure", () => {
+    const message = describeUpstreamError(fetchFailed({ code: "ENOTFOUND" }));
+    expect(message).toContain("LLM_BASE_URL");
+  });
+
+  it("explains a connect timeout", () => {
+    const message = describeUpstreamError(fetchFailed({ code: "ETIMEDOUT" }));
+    expect(message).toContain("didn't respond in time");
+  });
+
+  it("finds the code inside an AggregateError from multiple connection attempts", () => {
+    const aggregate = new AggregateError(
+      [Object.assign(new Error("attempt 1"), { code: "ECONNREFUSED" })],
+      "all attempts failed",
+    );
+    const message = describeUpstreamError(fetchFailed(aggregate));
+    expect(message).toContain("connection refused");
+  });
+
+  it("falls back to a generic reachability message when the cause has no known code", () => {
+    const message = describeUpstreamError(fetchFailed(undefined));
+    expect(message).toContain("can't reach the model server");
+  });
+
+  it("passes through a non-connection Error message unchanged", () => {
+    const message = describeUpstreamError(new Error("upstream 500: server error"));
+    expect(message).toBe("upstream 500: server error");
+  });
+
+  it("handles a thrown value that isn't an Error", () => {
+    const message = describeUpstreamError("not an error");
+    expect(message).toBe("unknown error talking to the model server.");
   });
 });
