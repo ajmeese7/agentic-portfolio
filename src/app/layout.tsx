@@ -8,7 +8,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const DESCRIPTION = "making complex systems work smarter, not harder.";
+const DESCRIPTION = "making complex systems work smarter.";
 const OG_IMAGE = {
   url: "/og-avatar.png",
   width: 1200,
