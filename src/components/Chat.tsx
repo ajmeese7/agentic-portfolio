@@ -16,7 +16,6 @@ const PROMPT_POOL = [
   "How was the avatar built?",
   "What is termblog?",
   "What problems excite you?",
-  "What does Meese Enterprises do?",
   "What's your local LLM work?",
 ];
 const VISIBLE_PROMPTS = 3;
