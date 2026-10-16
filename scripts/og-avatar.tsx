@@ -84,7 +84,7 @@ export function OgAvatar({ avatarDataUrl }: Props) {
         }}
       >
         <span style={{ color: MUTED, marginRight: 12 }}>↳</span>
-        <span>making complex systems work smarter, not harder.</span>
+        <span>making complex systems work smarter.</span>
       </div>
 
       {/* Domain */}

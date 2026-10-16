@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { buildSystemPrompt, type ChatMessage, getLlmConfig, streamChat } from "@/lib/llm";
+import {
+  buildSystemPrompt,
+  type ChatMessage,
+  describeUpstreamError,
+  getLlmConfig,
+  streamChat,
+} from "@/lib/llm";
 
 // Node runtime so we can read profile.md from disk. Switch to edge later
 // only if the profile is inlined as a string constant.
@@ -59,8 +65,7 @@ export async function POST(req: Request) {
           controller.enqueue(encoder.encode(delta));
         }
       } catch (err) {
-        const msg = err instanceof Error ? err.message : "unknown error";
-        controller.enqueue(encoder.encode(`\n\n[upstream error: ${msg}]`));
+        controller.enqueue(encoder.encode(`\n\n[${describeUpstreamError(err)}]`));
       } finally {
         controller.close();
       }
