@@ -31,7 +31,7 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.184.0",
     "playwright": "^1.60.0",
-    "satori": "^0.26.0",
+    "satori": "^0.33.5",
     "sharp": "^0.35.4",
     "tailwindcss": "^4.3.0",
     "tsx": "^4.22.3",
